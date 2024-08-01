@@ -1,0 +1,15 @@
+[package]
+name = "calculato_rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.28.1"
+itertools = "0.13.0"
+egui_extras = "0.28.1"
+
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+panic = "abort"
