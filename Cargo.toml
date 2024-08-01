@@ -4,9 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-eframe = "0.28.1"
+egui = "0.28.1"
+eframe = { version = "0.28.1", default-features = false, features = [
+    "accesskit",     # Make egui compatible with screen readers. NOTE: adds a lot of dependencies.
+    "persistence",   # Enable restoring app state when restarting the app.
+] }
 itertools = "0.13.0"
 egui_extras = "0.28.1"
+serde = { version = "1.0.204", features = ["derive"] }
 
 
 [profile.release]
