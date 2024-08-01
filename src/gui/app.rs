@@ -1,3 +1,4 @@
+use crate::actions::all::CalculatorActions;
 use crate::gui::actions::AllActions;
 use crate::solver::Solver;
 
@@ -8,8 +9,12 @@ pub struct CalculatorApp {
     input: i32,
     steps: u8,
     all_actions: AllActions,
+
     #[serde(skip)]
     solver: Solver,
+
+    #[serde(skip)]
+    solution: Option<Vec<CalculatorActions>>,
 }
 
 impl Default for CalculatorApp {
@@ -20,6 +25,7 @@ impl Default for CalculatorApp {
             steps: 1,
             all_actions: AllActions::default(),
             solver: Solver::default(),
+            solution: Some(Vec::with_capacity(10)),
         }
     }
 }
@@ -28,7 +34,7 @@ impl CalculatorApp {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
-        cc.egui_ctx.set_pixels_per_point(1.5);
+        // cc.egui_ctx.set_pixels_per_point(1.);
         // Load previous app state (if any).
         // Note that you must enable the `persistence` feature for this to work.
         if let Some(storage) = cc.storage {
@@ -67,10 +73,11 @@ impl eframe::App for CalculatorApp {
 
             ui.separator();
             ui.allocate_ui_with_layout(
-                egui::vec2(ui.available_width(), 30.),
-                egui::Layout::right_to_left(egui::Align::Center),
+                egui::vec2(ui.available_width(), 40.),
+                egui::Layout::right_to_left(egui::Align::TOP),
                 |ui| {
-                    ui.allocate_ui(egui::vec2(30., 30.), |ui| {
+                    ui.add_space(10.);
+                    ui.allocate_ui(egui::vec2(20., 35.), |ui| {
                         ui.centered_and_justified(|ui| {
                             ui.add(
                                 egui::DragValue::new(&mut self.input)
@@ -83,53 +90,172 @@ impl eframe::App for CalculatorApp {
             );
             ui.separator();
 
-            let columns_count: usize = (ui.available_width() / 40.).round() as usize;
-            egui::Grid::new("buttons").num_columns(2).show(ui, |ui| {
-                ui.allocate_ui(egui::vec2(40., 40.), |ui| {
-                    ui.button("add  ");
-                });
-                ui.allocate_ui(egui::vec2(40., 40.), |ui| {
-                    ui.button("add  ");
-                });
-                ui.allocate_ui(egui::vec2(40., 40.), |ui| {
-                    ui.button("add  ");
-                });
-                ui.end_row();
-                ui.allocate_ui(egui::vec2(40., 40.), |ui| {
-                    ui.button("add  ");
-                });
+            egui::ScrollArea::vertical().show(ui, |ui| {
+                egui::Grid::new("buttons")
+                    .striped(true)
+                    .spacing(egui::vec2(5., 10.))
+                    .show(ui, |ui| {
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| ui.add_space(40.));
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("Cancel").clicked() {
+                                    self.solver.actions.pop();
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("Reset").clicked() {
+                                    self.solver.actions.clear();
 
-                ui.end_row();
+                                    if let Some(ref mut current_solution) = self.solution {
+                                        current_solution.clear();
+                                    } else {
+                                        self.solution = Some(Vec::with_capacity(10));
+                                    };
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("Run").clicked() {
+                                    // if let Some(solution) = self.solver.evaluate() {
+                                    //     let new_solution: Vec<Box<dyn ActionEvaluation>> = solution.iter()
+                                    //         .map(| &action | {
+                                    //             let a = Box::new(*action.deref().clone());
+                                    //             a
+                                    //         }).collect();
+                                    //     // self.solution = Some(solution.iter()
+                                    //     //     .map(|&item| Box::new(item.clone()))
+                                    //     //
+                                    //     //     .collect());
+                                    //     self.solution = Some(new_solution);
+                                    //
+                                    // } else {
+                                    //     self.solution = None;
+                                    // };
+                                    // TODO: display result
+                                };
+                            });
+                        });
+                        ui.end_row();
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                if let CalculatorActions::AddValueAction { mut value } =
+                                    self.all_actions.add_value
+                                {
+                                    ui.add(
+                                        egui::DragValue::new(&mut value)
+                                            .speed(0.5)
+                                            .range(-9999..=9999),
+                                    );
+                                    if ui.button("Add: ").clicked() {
+                                        self.solver.add_action(self.all_actions.add_value.clone())
+                                    };
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                if let CalculatorActions::MultiplyByAction { mut value } =
+                                    self.all_actions.multiply_by
+                                {
+                                    ui.add(
+                                        egui::DragValue::new(&mut value)
+                                            .speed(0.5)
+                                            .range(-999..=999),
+                                    );
+                                    if ui.button("Mult: ").clicked() {
+                                        self.solver.add_action(self.all_actions.multiply_by.clone())
+                                    };
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                if let CalculatorActions::DivideByAction { mut value } =
+                                    self.all_actions.divide_by
+                                {
+                                    ui.add(
+                                        egui::DragValue::new(&mut value)
+                                            .speed(0.5)
+                                            .range(-999..=999),
+                                    );
+                                    if ui.button("Div: ").clicked() {
+                                        self.solver.add_action(self.all_actions.divide_by.clone())
+                                    };
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("<<").clicked() {
+                                    self.solver.add_action(self.all_actions.backspace.clone())
+                                };
+                            });
+                        });
+                        ui.end_row();
+
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                if let CalculatorActions::AppendValueAction { mut value } =
+                                    self.all_actions.append_value
+                                {
+                                    ui.add(
+                                        egui::DragValue::new(&mut value).speed(0.5).range(0..=9999),
+                                    );
+                                    if ui.button("Insert").clicked() {
+                                        self.solver
+                                            .add_action(self.all_actions.append_value.clone())
+                                    };
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                if let CalculatorActions::ReplaceValuesAction {
+                                    mut repl_trg,
+                                    mut repl_with,
+                                } = self.all_actions.replace_values
+                                {
+                                    ui.add(
+                                        egui::DragValue::new(&mut repl_trg)
+                                            .speed(0.5)
+                                            .range(-999..=999),
+                                    );
+                                    if ui.button("=>").clicked() {
+                                        self.solver
+                                            .add_action(self.all_actions.replace_values.clone())
+                                    };
+                                    ui.add(
+                                        egui::DragValue::new(&mut repl_with)
+                                            .speed(0.5)
+                                            .range(-999..=999),
+                                    );
+                                }
+                            });
+                        });
+
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("+/-").clicked() {
+                                    self.solver.add_action(self.all_actions.sign_inv.clone())
+                                };
+                            });
+                        });
+                        ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("Sum").clicked() {
+                                    self.solver.add_action(self.all_actions.sum_digits.clone())
+                                };
+                            });
+                        });
+                        ui.end_row();
+                        ui.end_row();
+                    });
             });
 
             ui.separator();
-
-            ui.horizontal(|ui| {
-                ui.spacing_mut().item_spacing.x = 0.0;
-                ui.label("Powered by ");
-                ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-                ui.label(" and ");
-                ui.hyperlink_to(
-                    "eframe",
-                    "https://github.com/emilk/egui/tree/master/crates/eframe",
-                );
-                ui.label(".");
-            });
-
-            // ui.separator();
-
-            // ui.text_edit_singleline(&mut self.name)
-            //     .labelled_by(name_label.id);
-            ui.add(egui::Button::new("=>").shortcut_text("32"));
-            ui.add(egui::Slider::new(&mut self.output, 0..=120).text("output"));
-            if ui.button("Increment").clicked() {
-                self.output += 1;
-            }
-            ui.label(format!("Hello '{}', output {}", self.steps, self.output));
-
-            // ui.image(egui::include_image!(
-            //     "../../../crates/egui/assets/ferris.png"
-            // ));
         });
     }
 }

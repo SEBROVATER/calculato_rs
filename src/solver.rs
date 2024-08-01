@@ -1,11 +1,11 @@
-use crate::actions::eval::ActionEvaluation;
+use crate::actions::all::CalculatorActions;
 use itertools::Itertools;
 
 pub struct Solver {
     pub input: i32,
     pub output: i32,
     pub steps: u8,
-    pub actions: Vec<Box<dyn ActionEvaluation>>,
+    pub actions: Vec<CalculatorActions>,
 }
 
 impl Default for Solver {
@@ -20,10 +20,10 @@ impl Default for Solver {
 }
 
 impl Solver {
-    pub fn add_action(&mut self, action: Box<dyn ActionEvaluation>) {
+    pub fn add_action(&mut self, action: CalculatorActions) {
         self.actions.push(action);
     }
-    pub fn remove_action(&mut self, _action: Box<dyn ActionEvaluation>) {
+    pub fn remove_action(&mut self, _action: CalculatorActions) {
         todo!("Find by comparison and remove");
     }
     pub fn remove_action_idx(&mut self, idx: usize) {
@@ -32,7 +32,7 @@ impl Solver {
         }
         self.actions.remove(idx);
     }
-    pub fn evaluate(&self) -> Option<Vec<&Box<dyn ActionEvaluation>>> {
+    pub fn evaluate(&self) -> Option<Vec<CalculatorActions>> {
         let mut it = self
             .actions
             .iter()
@@ -46,12 +46,13 @@ impl Solver {
             });
         // it.next()
         if let Some(actions) = it.next() {
-            // let res = actions.iter().map(| action | action.clone()).collect();
-            return Some(actions);
+            let res: Vec<CalculatorActions> =
+                actions.iter().map(|&action| action.clone()).collect();
+            return Some(res);
         };
-        return None;
+        None
     }
-    fn evaluate_one_combination(&self, actions: &Vec<&Box<dyn ActionEvaluation>>) -> bool {
+    fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> bool {
         let mut start = self.input.clone();
         for action in actions {
             match action.eval(start) {
@@ -59,14 +60,14 @@ impl Solver {
                 Err(_) => return false,
             }
         }
-        return start == self.output;
+        start == self.output
     }
     pub fn build(input: i32, output: i32, steps: u8) -> Solver {
-        return Solver {
+        Solver {
             input,
             output,
             steps,
             actions: Vec::with_capacity(steps as usize),
-        };
+        }
     }
 }
