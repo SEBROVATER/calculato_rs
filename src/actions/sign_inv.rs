@@ -3,6 +3,7 @@ use std::fmt;
 use std::fmt::Display;
 
 #[derive(Debug)]
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct SignInvAction {}
 
 impl ActionEvaluation for SignInvAction {

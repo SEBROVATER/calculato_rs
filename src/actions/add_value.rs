@@ -4,6 +4,7 @@ use std::fmt::Display;
 use crate::actions::eval::ActionEvaluation;
 
 #[derive(Debug)]
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct AddValueAction {
     pub value: i32,
 }

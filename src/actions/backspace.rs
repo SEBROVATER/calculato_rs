@@ -3,6 +3,7 @@ use std::fmt;
 use std::fmt::Display;
 
 #[derive(Debug)]
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct BackspaceAction {}
 impl ActionEvaluation for BackspaceAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {

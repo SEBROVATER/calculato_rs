@@ -3,9 +3,10 @@ use std::fmt;
 use std::fmt::Display;
 
 #[derive(Debug)]
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct ReplaceValuesAction {
-    repl_trg: i32,
-    repl_with: i32,
+    pub repl_trg: i32,
+    pub repl_with: i32,
 }
 
 impl ActionEvaluation for ReplaceValuesAction {
