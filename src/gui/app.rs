@@ -1,9 +1,15 @@
+use crate::gui::actions::AllActions;
+use crate::solver::Solver;
+
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct CalculatorApp {
     output: i32,
     input: i32,
     steps: u8,
+    all_actions: AllActions,
+    #[serde(skip)]
+    solver: Solver,
 }
 
 impl Default for CalculatorApp {
@@ -12,6 +18,8 @@ impl Default for CalculatorApp {
             output: 0,
             input: 0,
             steps: 1,
+            all_actions: AllActions::default(),
+            solver: Solver::default(),
         }
     }
 }
