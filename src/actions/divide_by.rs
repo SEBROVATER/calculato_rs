@@ -29,16 +29,34 @@ mod tests {
     use super::*;
 
     #[test]
-    fn divide_by_positive() {
+    fn divide_by_zero() {
         let action = DivideByAction { value: 4 };
         let res = action.eval(11);
-        assert_eq!(res, Ok(44));
+        assert_eq!(res, Err("Result cant be even"));
+    }
+    #[test]
+    fn divide_zero() {
+        let action = DivideByAction { value: 4 };
+        let res = action.eval(0);
+        assert_eq!(res, Ok(0));
+    }
+    #[test]
+    fn divide_with_rem() {
+        let action = DivideByAction { value: 4 };
+        let res = action.eval(1);
+        assert_eq!(res, Err("Result cant be even"));
+    }
+    #[test]
+    fn divide_by_positive() {
+        let action = DivideByAction { value: 4 };
+        let res = action.eval(8);
+        assert_eq!(res, Ok(2));
     }
 
     #[test]
     fn divide_by_negative() {
         let action = DivideByAction { value: -4 };
-        let res = action.eval(11);
-        assert_eq!(res, Ok(-44));
+        let res = action.eval(8);
+        assert_eq!(res, Ok(-2));
     }
 }
