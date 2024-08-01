@@ -1,11 +1,6 @@
 use eframe;
 use calculato_rs::CalculatorApp;
 
-mod actions;
-
-
-
-mod solver;
 
 fn main() -> eframe::Result {
 
