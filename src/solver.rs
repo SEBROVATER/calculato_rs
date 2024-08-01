@@ -2,10 +2,21 @@ use crate::actions::eval::ActionEvaluation;
 use itertools::Itertools;
 
 pub struct Solver {
-    input: i32,
-    output: i32,
-    steps: u8,
-    actions: Vec<Box<dyn ActionEvaluation>>,
+    pub input: i32,
+    pub output: i32,
+    pub steps: u8,
+    pub actions: Vec<Box<dyn ActionEvaluation>>,
+}
+
+impl Default for Solver {
+    fn default() -> Self {
+        Self {
+            input: 0,
+            output: 0,
+            steps: 1,
+            actions: Vec::with_capacity(10),
+        }
+    }
 }
 
 impl Solver {
