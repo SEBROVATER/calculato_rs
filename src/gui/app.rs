@@ -48,6 +48,28 @@ impl eframe::App for CalculatorApp {
 
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::SidePanel::left("actions").show(ctx, |ui| {
+            ui.label("Actions:");
+
+            for (i, action) in self.solver.actions.clone().iter().enumerate() {
+                if ui.button(action.as_string()).clicked() {
+                    self.solver.remove_action_idx(i);
+                };
+            }
+        });
+
+        egui::SidePanel::right("solution").show(ctx, |ui| {
+            ui.label("Solution:");
+
+            if let Some(solution) = &self.solution {
+                for action in solution {
+                    let _ = ui.button(action.as_string());
+                }
+            } else {
+                ui.label("Unsolvable");
+            };
+        });
+
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("calculato_rs");
             ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
