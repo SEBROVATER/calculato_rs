@@ -1,5 +1,4 @@
 use crate::actions::all::CalculatorActions;
-use crate::actions::multiply_by::MultiplyByAction;
 use crate::gui::actions::AllActions;
 use crate::solver::Solver;
 
@@ -124,33 +123,18 @@ impl eframe::App for CalculatorApp {
                             ui.centered_and_justified(|ui| {
                                 if ui.button("Reset").clicked() {
                                     self.solver.actions.clear();
-
-                                    if let Some(ref mut current_solution) = self.solution {
-                                        current_solution.clear();
-                                    } else {
-                                        self.solution = Some(Vec::with_capacity(10));
-                                    };
+                                    self.solution = Some(Vec::with_capacity(10));
                                 };
                             });
                         });
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.centered_and_justified(|ui| {
                                 if ui.button("Run").clicked() {
-                                    // if let Some(solution) = self.solver.evaluate() {
-                                    //     let new_solution: Vec<Box<dyn ActionEvaluation>> = solution.iter()
-                                    //         .map(| &action | {
-                                    //             let a = Box::new(*action.deref().clone());
-                                    //             a
-                                    //         }).collect();
-                                    //     // self.solution = Some(solution.iter()
-                                    //     //     .map(|&item| Box::new(item.clone()))
-                                    //     //
-                                    //     //     .collect());
-                                    //     self.solution = Some(new_solution);
-                                    //
-                                    // } else {
-                                    //     self.solution = None;
-                                    // };
+                                    if let Some(solution) = self.solver.evaluate() {
+                                        self.solution = Some(solution);
+                                    } else {
+                                        self.solution = None;
+                                    };
                                     // TODO: display result
                                 };
                             });
