@@ -33,10 +33,9 @@ impl Solver {
         self.actions.remove(idx);
     }
     pub fn evaluate(&self) -> Option<Vec<CalculatorActions>> {
-        let mut it = self
-            .actions
-            .iter()
-            .combinations_with_replacement(self.steps as usize)
+        let mut it = (0..self.steps)
+            .map(|_| &self.actions)
+            .multi_cartesian_product()
             .filter_map(|actions| {
                 if self.evaluate_one_combination(&actions) {
                     Some(actions)
@@ -48,12 +47,13 @@ impl Solver {
         if let Some(actions) = it.next() {
             let res: Vec<CalculatorActions> =
                 actions.iter().map(|&action| action.clone()).collect();
+
             return Some(res);
         };
         None
     }
-    fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> bool {
-        let mut start = self.input.clone();
+    pub fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> bool {
+        let mut start = self.input;
         for action in actions {
             match action.eval(start) {
                 Ok(output) => start = output,
