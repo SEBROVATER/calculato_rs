@@ -6,9 +6,6 @@ use crate::solver::Solver;
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct CalculatorApp {
-    output: i32,
-    input: i32,
-    steps: u8,
     all_actions: AllActions,
 
     #[serde(skip)]
@@ -21,9 +18,6 @@ pub struct CalculatorApp {
 impl Default for CalculatorApp {
     fn default() -> Self {
         Self {
-            output: 0,
-            input: 0,
-            steps: 1,
             all_actions: AllActions::default(),
             solver: Solver::default(),
             solution: Some(Vec::with_capacity(10)),
@@ -58,14 +52,14 @@ impl eframe::App for CalculatorApp {
             ui.heading("calculato_rs");
             ui.with_layout(egui::Layout::right_to_left(egui::Align::TOP), |ui| {
                 ui.add(
-                    egui::DragValue::new(&mut self.output)
+                    egui::DragValue::new(&mut self.solver.output)
                         .speed(0.5)
                         .range(-99999..=99999)
                         .prefix("Out: "),
                 );
 
                 ui.add(
-                    egui::DragValue::new(&mut self.steps)
+                    egui::DragValue::new(&mut self.solver.steps)
                         .speed(0.1)
                         .range(1..=99)
                         .prefix("Steps: "),
@@ -81,7 +75,7 @@ impl eframe::App for CalculatorApp {
                     ui.allocate_ui(egui::vec2(20., 35.), |ui| {
                         ui.centered_and_justified(|ui| {
                             ui.add(
-                                egui::DragValue::new(&mut self.input)
+                                egui::DragValue::new(&mut self.solver.input)
                                     .speed(0.5)
                                     .range(-99999..=99999),
                             );
