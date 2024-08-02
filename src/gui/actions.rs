@@ -1,17 +1,24 @@
-use crate::actions::all::CalculatorActions;
+use crate::actions::add_value::AddValueAction;
+use crate::actions::append_value::AppendValueAction;
+use crate::actions::backspace::BackspaceAction;
+use crate::actions::divide_by::DivideByAction;
+use crate::actions::multiply_by::MultiplyByAction;
+use crate::actions::replace_values::ReplaceValuesAction;
+use crate::actions::sign_inv::SignInvAction;
+use crate::actions::sum_digits::SumDigitsAction;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct AllActions {
-    pub add_value: CalculatorActions,
-    pub multiply_by: CalculatorActions,
-    pub divide_by: CalculatorActions,
-    pub backspace: CalculatorActions,
-    pub append_value: CalculatorActions,
-    pub replace_values: CalculatorActions,
-    pub sign_inv: CalculatorActions,
+    pub add_value: AddValueAction,
+    pub divide_by: DivideByAction,
+    pub multiply_by: MultiplyByAction,
+    pub backspace: BackspaceAction,
+    pub append_value: AppendValueAction,
+    pub replace_values: ReplaceValuesAction,
+    pub sign_inv: SignInvAction,
     // TODO: reverse
-    pub sum_digits: CalculatorActions,
+    pub sum_digits: SumDigitsAction,
     // TODO: shift
     // TODO: mirror
     // TODO: value change?
@@ -23,17 +30,17 @@ pub struct AllActions {
 impl Default for AllActions {
     fn default() -> Self {
         Self {
-            add_value: CalculatorActions::AddValueAction { value: 0 },
-            multiply_by: CalculatorActions::MultiplyByAction { value: 1 },
-            divide_by: CalculatorActions::DivideByAction { value: 1 },
-            backspace: CalculatorActions::BackspaceAction {},
-            append_value: CalculatorActions::AppendValueAction { value: 0 },
-            replace_values: CalculatorActions::ReplaceValuesAction {
+            add_value: AddValueAction { value: 0 },
+            divide_by: DivideByAction { value: 1 },
+            multiply_by: MultiplyByAction { value: 1 },
+            backspace: BackspaceAction {},
+            append_value: AppendValueAction { value: 0 },
+            replace_values: ReplaceValuesAction {
                 repl_trg: 0,
                 repl_with: 0,
             },
-            sign_inv: CalculatorActions::SignInvAction {},
-            sum_digits: CalculatorActions::SumDigitsAction {},
+            sign_inv: SignInvAction {},
+            sum_digits: SumDigitsAction {},
         }
     }
 }

@@ -1,4 +1,5 @@
 use crate::actions::all::CalculatorActions;
+use crate::actions::multiply_by::MultiplyByAction;
 use crate::gui::actions::AllActions;
 use crate::solver::Solver;
 
@@ -141,56 +142,52 @@ impl eframe::App for CalculatorApp {
                         ui.end_row();
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.vertical_centered_justified(|ui| {
-                                if let CalculatorActions::AddValueAction { mut value } =
-                                    self.all_actions.add_value
-                                {
-                                    ui.add(
-                                        egui::DragValue::new(&mut value)
-                                            .speed(0.5)
-                                            .range(-9999..=9999),
-                                    );
-                                    if ui.button("Add: ").clicked() {
-                                        self.solver.add_action(self.all_actions.add_value.clone())
-                                    };
+                                ui.add(
+                                    egui::DragValue::new(&mut self.all_actions.add_value.value)
+                                        .speed(0.5)
+                                        .range(-9999..=9999),
+                                );
+                                if ui.button("Add: ").clicked() {
+                                    self.solver.add_action(CalculatorActions::AddValue(
+                                        self.all_actions.add_value.clone(),
+                                    ))
                                 };
                             });
                         });
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.vertical_centered_justified(|ui| {
-                                if let CalculatorActions::MultiplyByAction { mut value } =
-                                    self.all_actions.multiply_by
-                                {
-                                    ui.add(
-                                        egui::DragValue::new(&mut value)
-                                            .speed(0.5)
-                                            .range(-999..=999),
-                                    );
-                                    if ui.button("Mult: ").clicked() {
-                                        self.solver.add_action(self.all_actions.multiply_by.clone())
-                                    };
+                                ui.add(
+                                    egui::DragValue::new(&mut self.all_actions.multiply_by.value)
+                                        .speed(0.5)
+                                        .range(-999..=999),
+                                );
+                                if ui.button("Mult: ").clicked() {
+                                    self.solver.add_action(CalculatorActions::MultiplyBy(
+                                        self.all_actions.multiply_by.clone(),
+                                    ))
                                 };
                             });
                         });
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.vertical_centered_justified(|ui| {
-                                if let CalculatorActions::DivideByAction { mut value } =
-                                    self.all_actions.divide_by
-                                {
-                                    ui.add(
-                                        egui::DragValue::new(&mut value)
-                                            .speed(0.5)
-                                            .range(-999..=999),
-                                    );
-                                    if ui.button("Div: ").clicked() {
-                                        self.solver.add_action(self.all_actions.divide_by.clone())
-                                    };
+                                ui.add(
+                                    egui::DragValue::new(&mut self.all_actions.divide_by.value)
+                                        .speed(0.5)
+                                        .range(-999..=999),
+                                );
+                                if ui.button("Div: ").clicked() {
+                                    self.solver.add_action(CalculatorActions::DivideBy(
+                                        self.all_actions.divide_by.clone(),
+                                    ))
                                 };
                             });
                         });
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.centered_and_justified(|ui| {
                                 if ui.button("<<").clicked() {
-                                    self.solver.add_action(self.all_actions.backspace.clone())
+                                    self.solver.add_action(CalculatorActions::Backspace(
+                                        self.all_actions.backspace.clone(),
+                                    ))
                                 };
                             });
                         });
@@ -198,55 +195,57 @@ impl eframe::App for CalculatorApp {
 
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.vertical_centered_justified(|ui| {
-                                if let CalculatorActions::AppendValueAction { mut value } =
-                                    self.all_actions.append_value
-                                {
-                                    ui.add(
-                                        egui::DragValue::new(&mut value).speed(0.5).range(0..=9999),
-                                    );
-                                    if ui.button("Insert").clicked() {
-                                        self.solver
-                                            .add_action(self.all_actions.append_value.clone())
-                                    };
+                                ui.add(
+                                    egui::DragValue::new(&mut self.all_actions.append_value.value)
+                                        .speed(0.5)
+                                        .range(0..=9999),
+                                );
+                                if ui.button("Insert").clicked() {
+                                    self.solver.add_action(CalculatorActions::AppendValue(
+                                        self.all_actions.append_value.clone(),
+                                    ))
                                 };
                             });
                         });
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.vertical_centered_justified(|ui| {
-                                if let CalculatorActions::ReplaceValuesAction {
-                                    mut repl_trg,
-                                    mut repl_with,
-                                } = self.all_actions.replace_values
-                                {
-                                    ui.add(
-                                        egui::DragValue::new(&mut repl_trg)
-                                            .speed(0.5)
-                                            .range(-999..=999),
-                                    );
-                                    if ui.button("=>").clicked() {
-                                        self.solver
-                                            .add_action(self.all_actions.replace_values.clone())
-                                    };
-                                    ui.add(
-                                        egui::DragValue::new(&mut repl_with)
-                                            .speed(0.5)
-                                            .range(-999..=999),
-                                    );
-                                }
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.replace_values.repl_trg,
+                                    )
+                                    .speed(0.5)
+                                    .range(-999..=999),
+                                );
+                                if ui.button("=>").clicked() {
+                                    self.solver.add_action(CalculatorActions::ReplaceValues(
+                                        self.all_actions.replace_values.clone(),
+                                    ))
+                                };
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.replace_values.repl_with,
+                                    )
+                                    .speed(0.5)
+                                    .range(-999..=999),
+                                );
                             });
                         });
 
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.centered_and_justified(|ui| {
                                 if ui.button("+/-").clicked() {
-                                    self.solver.add_action(self.all_actions.sign_inv.clone())
+                                    self.solver.add_action(CalculatorActions::SignInv(
+                                        self.all_actions.sign_inv.clone(),
+                                    ))
                                 };
                             });
                         });
                         ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                             ui.centered_and_justified(|ui| {
                                 if ui.button("Sum").clicked() {
-                                    self.solver.add_action(self.all_actions.sum_digits.clone())
+                                    self.solver.add_action(CalculatorActions::SumDigits(
+                                        self.all_actions.sum_digits.clone(),
+                                    ))
                                 };
                             });
                         });
