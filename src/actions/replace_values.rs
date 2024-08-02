@@ -2,7 +2,7 @@ use crate::actions::eval::ActionEvaluation;
 use std::fmt;
 use std::fmt::Display;
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct ReplaceValuesAction {
     pub repl_trg: i32,
     pub repl_with: i32,

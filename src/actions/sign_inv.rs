@@ -2,12 +2,12 @@ use crate::actions::eval::ActionEvaluation;
 use std::fmt;
 use std::fmt::Display;
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct SignInvAction {}
 
 impl ActionEvaluation for SignInvAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = input * -1;
+        let output = -input;
         Ok(output)
     }
 }

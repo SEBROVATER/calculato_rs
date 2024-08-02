@@ -2,7 +2,7 @@ use crate::actions::eval::ActionEvaluation;
 use std::fmt;
 use std::fmt::Display;
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct BackspaceAction {}
 impl ActionEvaluation for BackspaceAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {

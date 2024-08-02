@@ -3,7 +3,7 @@ use std::fmt::Display;
 
 use crate::actions::eval::ActionEvaluation;
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct AppendValueAction {
     pub value: i32,
 }

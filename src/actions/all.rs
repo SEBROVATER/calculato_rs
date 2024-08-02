@@ -8,7 +8,7 @@ use crate::actions::replace_values::ReplaceValuesAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::sum_digits::SumDigitsAction;
 
-#[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
+#[derive(serde::Deserialize, serde::Serialize, Debug, Clone, PartialEq)]
 pub enum CalculatorActions {
     AddValue(AddValueAction),
     MultiplyBy(MultiplyByAction),
@@ -28,6 +28,35 @@ pub enum CalculatorActions {
 }
 
 impl CalculatorActions {
+    pub fn as_string(&self) -> String {
+        match self {
+            CalculatorActions::AddValue(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::MultiplyBy(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::DivideBy(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::Backspace(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::AppendValue(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::ReplaceValues(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::SignInv(action) => {
+                format!("{}", action)
+            }
+            CalculatorActions::SumDigits(action) => {
+                format!("{}", action)
+            }
+        }
+    }
+
     pub fn eval(&self, input: i32) -> Result<i32, &'static str> {
         match self {
             Self::AddValue(action) => action.eval(input),

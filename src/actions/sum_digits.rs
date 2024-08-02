@@ -2,12 +2,12 @@ use crate::actions::eval::ActionEvaluation;
 use std::fmt;
 use std::fmt::Display;
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct SumDigitsAction;
 
 impl ActionEvaluation for SumDigitsAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let mut div: i32 = input.clone();
+        let mut div: i32 = input;
         let mut rem: i32;
 
         let mut accum: i32 = 0;

@@ -3,7 +3,7 @@ use std::fmt::Display;
 
 use crate::actions::eval::ActionEvaluation;
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct DivideByAction {
     pub value: i32,
 }
