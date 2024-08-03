@@ -1,10 +1,12 @@
 use crate::actions::all::CalculatorActions;
 use itertools::Itertools;
 
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct Solver {
     pub input: i32,
     pub output: i32,
     pub moves: u8,
+    #[serde(skip)]
     pub actions: Vec<CalculatorActions>,
 }
 

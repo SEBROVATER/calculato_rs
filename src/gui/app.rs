@@ -7,7 +7,6 @@ use crate::solver::Solver;
 pub struct CalculatorApp {
     all_actions: AllActions,
 
-    #[serde(skip)]
     solver: Solver,
 
     #[serde(skip)]
