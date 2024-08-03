@@ -23,7 +23,7 @@ impl ActionEvaluation for ReplaceValuesAction {
 }
 impl Display for ReplaceValuesAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Replace values: {} -> {}", self.repl_trg, self.repl_with)
+        write!(f, "{} => {}", self.repl_trg, self.repl_with)
     }
 }
 

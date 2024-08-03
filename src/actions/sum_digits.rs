@@ -23,7 +23,7 @@ impl ActionEvaluation for SumDigitsAction {
 
 impl Display for SumDigitsAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Sum digits")
+        write!(f, "SUM")
     }
 }
 

@@ -14,7 +14,7 @@ impl ActionEvaluation for SignInvAction {
 
 impl Display for SignInvAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Invert sign: +/-")
+        write!(f, "+/-")
     }
 }
 

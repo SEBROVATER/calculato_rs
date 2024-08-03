@@ -18,7 +18,7 @@ impl ActionEvaluation for AppendValueAction {
 }
 impl Display for AppendValueAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Append value: {}", self.value)
+        write!(f, "{}", self.value)
     }
 }
 

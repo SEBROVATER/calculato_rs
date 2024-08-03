@@ -18,9 +18,9 @@ impl ActionEvaluation for AddValueAction {
 impl Display for AddValueAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.value > 0 {
-            write!(f, "Add value: +{}", self.value)
+            write!(f, "+{}", self.value)
         } else {
-            write!(f, "Add value: {}", self.value)
+            write!(f, "{}", self.value)
         }
     }
 }

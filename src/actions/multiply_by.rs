@@ -17,7 +17,7 @@ impl ActionEvaluation for MultiplyByAction {
 
 impl Display for MultiplyByAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Multiply by: {}", self.value)
+        write!(f, "* {}", self.value)
     }
 }
 

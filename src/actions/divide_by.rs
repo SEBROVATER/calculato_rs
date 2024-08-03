@@ -20,7 +20,7 @@ impl ActionEvaluation for DivideByAction {
 
 impl Display for DivideByAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Divide by: {}", self.value)
+        write!(f, "/ {}", self.value)
     }
 }
 
