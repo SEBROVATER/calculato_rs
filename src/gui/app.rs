@@ -76,14 +76,14 @@ impl eframe::App for CalculatorApp {
                     egui::DragValue::new(&mut self.solver.output)
                         .speed(0.5)
                         .range(-99999..=99999)
-                        .prefix("Out: "),
+                        .prefix("Goal: "),
                 );
 
                 ui.add(
-                    egui::DragValue::new(&mut self.solver.steps)
+                    egui::DragValue::new(&mut self.solver.moves)
                         .speed(0.1)
                         .range(1..=99)
-                        .prefix("Steps: "),
+                        .prefix("Moves: "),
                 );
             });
 

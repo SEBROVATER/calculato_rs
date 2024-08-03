@@ -8,7 +8,7 @@ fn has_solution() {
     let mut solver = Solver {
         input: 10,
         output: 50,
-        steps: 3,
+        moves: 3,
         actions: vec![],
     };
 
@@ -35,7 +35,7 @@ fn correct_solution() {
     let mut solver = Solver {
         input: 10,
         output: 50,
-        steps: 3,
+        moves: 3,
         actions: vec![],
     };
 

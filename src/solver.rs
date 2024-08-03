@@ -4,7 +4,7 @@ use itertools::Itertools;
 pub struct Solver {
     pub input: i32,
     pub output: i32,
-    pub steps: u8,
+    pub moves: u8,
     pub actions: Vec<CalculatorActions>,
 }
 
@@ -13,7 +13,7 @@ impl Default for Solver {
         Self {
             input: 0,
             output: 0,
-            steps: 1,
+            moves: 1,
             actions: Vec::with_capacity(10),
         }
     }
@@ -33,7 +33,7 @@ impl Solver {
         self.actions.remove(idx);
     }
     pub fn evaluate(&self) -> Option<Vec<CalculatorActions>> {
-        let mut it = (0..self.steps)
+        let mut it = (0..self.moves)
             .map(|_| &self.actions)
             .multi_cartesian_product()
             .filter_map(|actions| {
@@ -62,12 +62,12 @@ impl Solver {
         }
         start == self.output
     }
-    pub fn build(input: i32, output: i32, steps: u8) -> Solver {
+    pub fn build(input: i32, output: i32, moves: u8) -> Solver {
         Solver {
             input,
             output,
-            steps,
-            actions: Vec::with_capacity(steps as usize),
+            moves,
+            actions: Vec::with_capacity(moves as usize),
         }
     }
 }
