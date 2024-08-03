@@ -35,6 +35,9 @@ impl Solver {
         self.actions.remove(idx);
     }
     pub fn evaluate(&self) -> Option<Vec<CalculatorActions>> {
+        if self.input == self.output {
+            return None;
+        };
         let mut it = (0..self.moves)
             .map(|_| &self.actions)
             .multi_cartesian_product()
