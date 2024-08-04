@@ -73,6 +73,7 @@ impl eframe::App for CalculatorApp {
                         let _ = ui.button(action.as_string());
                     }
                 };
+                // TODO: multi-solution
             });
 
         egui::CentralPanel::default().show(ctx, |ui| {
