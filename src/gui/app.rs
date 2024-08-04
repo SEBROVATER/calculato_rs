@@ -50,7 +50,7 @@ impl eframe::App for CalculatorApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::SidePanel::left("actions")
-            .max_width(65.)
+            .max_width(73.)
             .resizable(false)
             .show(ctx, |ui| {
                 ui.add(egui::Label::new("Actions:").wrap_mode(TextWrapMode::Extend));
@@ -63,7 +63,7 @@ impl eframe::App for CalculatorApp {
             });
 
         egui::SidePanel::right("solution")
-            .max_width(65.)
+            .max_width(73.)
             .resizable(false)
             .show(ctx, |ui| {
                 ui.add(egui::Label::new("Solution:").wrap_mode(TextWrapMode::Extend));
