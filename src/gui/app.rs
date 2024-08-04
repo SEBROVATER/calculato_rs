@@ -146,7 +146,7 @@ impl eframe::App for CalculatorApp {
                             });
                             ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                                 ui.centered_and_justified(|ui| {
-                                    if ui.button("Run").clicked() {
+                                    if ui.button("Solve").clicked() {
                                         if let Some(solution) = self.solver.evaluate() {
                                             self.solution = Some(solution);
                                         } else {
