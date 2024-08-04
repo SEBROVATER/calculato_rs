@@ -210,7 +210,7 @@ impl eframe::App for CalculatorApp {
                                                 &mut self.all_actions.divide_by.value,
                                             )
                                             .speed(0.2)
-                                            .range(-999..=999),
+                                            .range(-99..=99),
                                         );
                                     });
                                     ui.centered_and_justified(|ui| {
