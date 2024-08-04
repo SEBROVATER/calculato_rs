@@ -10,10 +10,12 @@ pub struct AppendValueAction {
 
 impl ActionEvaluation for AppendValueAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = (String::new() + &input.to_string() + &self.value.abs().to_string())
-            .parse::<i32>()
-            .unwrap();
-        Ok(output)
+        let result = (String::new() + &input.to_string() + &self.value.abs().to_string())
+            .parse::<i32>();
+        if let Ok(output) = result {
+            return Ok(output);
+        };
+        Err("Can't insert value")
     }
 }
 impl Display for AppendValueAction {
