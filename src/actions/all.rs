@@ -4,7 +4,9 @@ use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
 use crate::actions::eval::ActionEvaluation;
 use crate::actions::multiply_by::MultiplyByAction;
+use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
+use crate::actions::reverse::ReverseAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::sum_digits::SumDigitsAction;
 
@@ -16,8 +18,9 @@ pub enum CalculatorActions {
     Backspace(BackspaceAction),
     AppendValue(AppendValueAction),
     ReplaceValues(ReplaceValuesAction),
+    Pow(PowAction),
     SignInv(SignInvAction),
-    // TODO: reverse
+    Reverse(ReverseAction),
     SumDigits(SumDigitsAction),
     // TODO: shift
     // TODO: mirror
@@ -30,30 +33,32 @@ pub enum CalculatorActions {
 impl CalculatorActions {
     pub fn as_string(&self) -> String {
         match self {
-            CalculatorActions::AddValue(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::MultiplyBy(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::DivideBy(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::Backspace(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::AppendValue(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::ReplaceValues(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::SignInv(action) => {
-                format!("{}", action)
-            }
-            CalculatorActions::SumDigits(action) => {
-                format!("{}", action)
-            }
+            Self::AddValue(action) =>
+                format!("{}", action),
+
+            Self::MultiplyBy(action) =>
+                format!("{}", action),
+
+            Self::DivideBy(action) =>
+                format!("{}", action),
+
+            Self::Backspace(action) =>
+                format!("{}", action),
+
+            Self::AppendValue(action) =>
+                format!("{}", action),
+
+            Self::ReplaceValues(action) =>
+                format!("{}", action),
+
+            Self::SignInv(action) =>
+                format!("{}", action),
+
+            Self::SumDigits(action) =>
+                format!("{}", action),
+
+            Self::Pow(action) => format!("{}", action),
+            Self::Reverse(action) => format!("{}", action),
         }
     }
 
@@ -67,6 +72,8 @@ impl CalculatorActions {
             Self::ReplaceValues(action) => action.eval(input),
             Self::SignInv(action) => action.eval(input),
             Self::SumDigits(action) => action.eval(input),
+            Self::Pow(action) => action.eval(input),
+            Self::Reverse(action) => action.eval(input),
         }
     }
 }

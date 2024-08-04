@@ -9,3 +9,5 @@ pub mod sign_inv;
 pub mod sum_digits;
 
 pub mod all;
+pub mod pow;
+pub mod reverse;
