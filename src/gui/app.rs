@@ -292,6 +292,29 @@ impl eframe::App for CalculatorApp {
                                 },
                             );
                             ui.end_row();
+
+                            ui.allocate_ui_with_layout(
+                                egui::vec2(45., 45.),
+                                egui::Layout::top_down(egui::Align::Center),
+                                |ui| {
+                                    ui.vertical_centered_justified(|ui| {
+                                        ui.add(
+                                            egui::DragValue::new(
+                                                &mut self.all_actions.pow.value,
+                                            )
+                                                .speed(0.1)
+                                                .range(0..=10),
+                                        );
+                                    });
+                                    ui.centered_and_justified(|ui| {
+                                        if ui.button("x^n").clicked() {
+                                            self.solver.add_action(CalculatorActions::Pow(
+                                                self.all_actions.pow.clone(),
+                                            ))
+                                        };
+                                    });
+                                },
+                            );
                             ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                                 ui.centered_and_justified(|ui| {
                                     if ui.button("+/-").clicked() {
@@ -301,6 +324,19 @@ impl eframe::App for CalculatorApp {
                                     };
                                 });
                             });
+
+
+                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                                ui.centered_and_justified(|ui| {
+                                    if ui.button("Rvrs").clicked() {
+                                        self.solver.add_action(CalculatorActions::Reverse(
+                                            self.all_actions.reverse.clone(),
+                                        ))
+                                    };
+                                });
+                            });
+                            ui.end_row();
+
                             ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                                 ui.centered_and_justified(|ui| {
                                     if ui.button("SUM").clicked() {

@@ -1,9 +1,12 @@
 use crate::actions::add_value::AddValueAction;
+use crate::actions::all::CalculatorActions::Pow;
 use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
 use crate::actions::multiply_by::MultiplyByAction;
+use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
+use crate::actions::reverse::ReverseAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::sum_digits::SumDigitsAction;
 
@@ -16,8 +19,9 @@ pub struct AllActions {
     pub backspace: BackspaceAction,
     pub append_value: AppendValueAction,
     pub replace_values: ReplaceValuesAction,
+    pub pow: PowAction,
     pub sign_inv: SignInvAction,
-    // TODO: reverse
+    pub reverse: ReverseAction,
     pub sum_digits: SumDigitsAction,
     // TODO: shift
     // TODO: mirror
@@ -39,7 +43,9 @@ impl Default for AllActions {
                 repl_trg: 0,
                 repl_with: 0,
             },
+            pow: PowAction {value: 1},
             sign_inv: SignInvAction {},
+            reverse: ReverseAction {},
             sum_digits: SumDigitsAction {},
         }
     }
