@@ -43,7 +43,7 @@ impl Default for AllActions {
                 repl_trg: 0,
                 repl_with: 0,
             },
-            pow: PowAction {value: 1},
+            pow: PowAction { value: 1 },
             sign_inv: SignInvAction {},
             reverse: ReverseAction {},
             sum_digits: SumDigitsAction {},

@@ -33,30 +33,14 @@ pub enum CalculatorActions {
 impl CalculatorActions {
     pub fn as_string(&self) -> String {
         match self {
-            Self::AddValue(action) =>
-                format!("{}", action),
-
-            Self::MultiplyBy(action) =>
-                format!("{}", action),
-
-            Self::DivideBy(action) =>
-                format!("{}", action),
-
-            Self::Backspace(action) =>
-                format!("{}", action),
-
-            Self::AppendValue(action) =>
-                format!("{}", action),
-
-            Self::ReplaceValues(action) =>
-                format!("{}", action),
-
-            Self::SignInv(action) =>
-                format!("{}", action),
-
-            Self::SumDigits(action) =>
-                format!("{}", action),
-
+            Self::AddValue(action) => format!("{}", action),
+            Self::MultiplyBy(action) => format!("{}", action),
+            Self::DivideBy(action) => format!("{}", action),
+            Self::Backspace(action) => format!("{}", action),
+            Self::AppendValue(action) => format!("{}", action),
+            Self::ReplaceValues(action) => format!("{}", action),
+            Self::SignInv(action) => format!("{}", action),
+            Self::SumDigits(action) => format!("{}", action),
             Self::Pow(action) => format!("{}", action),
             Self::Reverse(action) => format!("{}", action),
         }

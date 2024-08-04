@@ -300,9 +300,7 @@ impl eframe::App for CalculatorApp {
                                 |ui| {
                                     ui.vertical_centered_justified(|ui| {
                                         ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.pow.value,
-                                            )
+                                            egui::DragValue::new(&mut self.all_actions.pow.value)
                                                 .speed(0.1)
                                                 .range(0..=10),
                                         );
@@ -325,7 +323,6 @@ impl eframe::App for CalculatorApp {
                                     };
                                 });
                             });
-
 
                             ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                                 ui.centered_and_justified(|ui| {
@@ -351,7 +348,6 @@ impl eframe::App for CalculatorApp {
                             ui.end_row();
                         });
                 });
-
 
             ui.separator();
         });

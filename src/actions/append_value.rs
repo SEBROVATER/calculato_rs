@@ -10,8 +10,8 @@ pub struct AppendValueAction {
 
 impl ActionEvaluation for AppendValueAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let result = (String::new() + &input.to_string() + &self.value.abs().to_string())
-            .parse::<i32>();
+        let result =
+            (String::new() + &input.to_string() + &self.value.abs().to_string()).parse::<i32>();
         if let Ok(output) = result {
             return Ok(output);
         };
