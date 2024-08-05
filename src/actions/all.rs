@@ -7,6 +7,8 @@ use crate::actions::multiply_by::MultiplyByAction;
 use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
 use crate::actions::reverse::ReverseAction;
+use crate::actions::shift_l::ShiftLAction;
+use crate::actions::shift_r::{ShiftRAction};
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::sum_digits::SumDigitsAction;
 
@@ -22,7 +24,8 @@ pub enum CalculatorActions {
     SignInv(SignInvAction),
     Reverse(ReverseAction),
     SumDigits(SumDigitsAction),
-    // TODO: shift < and >
+    ShiftL(ShiftLAction),
+    ShiftR(ShiftRAction)
     // TODO: mirror
     // TODO: value change?
     // TODO: store
@@ -43,6 +46,8 @@ impl CalculatorActions {
             Self::SumDigits(action) => format!("{}", action),
             Self::Pow(action) => format!("{}", action),
             Self::Reverse(action) => format!("{}", action),
+            Self::ShiftL(action) => format!("{}", action),
+            Self::ShiftR(action) => format!("{}", action),
         }
     }
 
@@ -58,6 +63,8 @@ impl CalculatorActions {
             Self::SumDigits(action) => action.eval(input),
             Self::Pow(action) => action.eval(input),
             Self::Reverse(action) => action.eval(input),
+            Self::ShiftL(action) => action.eval(input),
+            Self::ShiftR(action) => action.eval(input),
         }
     }
 }
