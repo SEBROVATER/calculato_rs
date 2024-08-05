@@ -366,6 +366,17 @@ impl eframe::App for CalculatorApp {
                             });
 
                             ui.end_row();
+                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                                ui.centered_and_justified(|ui| {
+                                    if ui.button("Mirror").clicked() {
+                                        self.solver.add_action(CalculatorActions::Mirror(
+                                            self.all_actions.mirror.clone(),
+                                        ))
+                                    };
+                                });
+                            });
+
+                            ui.end_row();
                         });
                 });
 

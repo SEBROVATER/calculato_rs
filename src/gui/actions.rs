@@ -2,6 +2,7 @@ use crate::actions::add_value::AddValueAction;
 use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
+use crate::actions::mirror::MirrorAction;
 use crate::actions::multiply_by::MultiplyByAction;
 use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
@@ -26,7 +27,7 @@ pub struct AllActions {
     pub sum_digits: SumDigitsAction,
     pub shift_l: ShiftLAction,
     pub shift_r: ShiftRAction,
-    // TODO: mirror
+    pub mirror: MirrorAction,
     // TODO: value change?
     // TODO: store
     // TODO: invert 10
@@ -51,6 +52,7 @@ impl Default for AllActions {
             sum_digits: SumDigitsAction {},
             shift_l: ShiftLAction {},
             shift_r: ShiftRAction {},
+            mirror: MirrorAction {},
         }
     }
 }
