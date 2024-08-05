@@ -42,32 +42,45 @@ impl Solver {
             .map(|_| &self.actions)
             .multi_cartesian_product()
             .filter_map(|actions| {
-                if self.evaluate_one_combination(&actions) {
-                    Some(actions)
+                if let Some(solution) = self.evaluate_one_combination(&actions) {
+                    Some(solution)
                 } else {
                     None
                 }
             });
         let mut solutions:Vec<Vec<CalculatorActions>> = Vec::with_capacity(5);
         for solution in it {
-            let res: Vec<CalculatorActions> =
-                solution.iter().map(|&action| action.clone()).collect();
-            solutions.push(res);
+            solutions.push(solution);
         };
         if solutions.len() == 0 {
             return None;
         }
         Some(solutions)
     }
-    pub fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> bool {
+    pub fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> Option<Vec<CalculatorActions>> {
         let mut start = self.input;
-        for action in actions {
-            match action.eval(start) {
+        let mut actions_copy: Vec<CalculatorActions> =
+            actions.iter().map(|&action| action.clone()).collect();
+
+        for i in 0..actions_copy.len() {
+            let (left_mid, right) = actions_copy.split_at_mut(i+1);
+            if let CalculatorActions::IncrementButtons(action_) = left_mid.get(i).unwrap() {
+                if let Err(_) = action_.eval_on_actions(right) {
+                    return None;
+
+                };
+            };
+            match actions_copy.get(i).unwrap().eval(start) {
                 Ok(output) => start = output,
-                Err(_) => return false,
+                Err(_) => return None,
             }
         }
-        start == self.output
+        if start == self.output {
+            Some(actions_copy)
+        } else {
+            None
+        }
+
     }
     pub fn build(input: i32, output: i32, moves: u8) -> Solver {
         Solver {
