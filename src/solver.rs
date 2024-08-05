@@ -34,11 +34,11 @@ impl Solver {
         }
         self.actions.remove(idx);
     }
-    pub fn evaluate(&self) -> Option<Vec<CalculatorActions>> {
+    pub fn evaluate(&self) -> Option<Vec<Vec<CalculatorActions>>> {
         if self.input == self.output {
             return None;
         };
-        let mut it = (0..self.moves)
+        let it = (0..self.moves)
             .map(|_| &self.actions)
             .multi_cartesian_product()
             .filter_map(|actions| {
@@ -48,14 +48,16 @@ impl Solver {
                     None
                 }
             });
-        // it.next()
-        if let Some(actions) = it.next() {
+        let mut solutions:Vec<Vec<CalculatorActions>> = Vec::with_capacity(5);
+        for solution in it {
             let res: Vec<CalculatorActions> =
-                actions.iter().map(|&action| action.clone()).collect();
-
-            return Some(res);
+                solution.iter().map(|&action| action.clone()).collect();
+            solutions.push(res);
         };
-        None
+        if solutions.len() == 0 {
+            return None;
+        }
+        Some(solutions)
     }
     pub fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> bool {
         let mut start = self.input;

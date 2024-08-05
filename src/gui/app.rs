@@ -12,7 +12,7 @@ pub struct CalculatorApp {
     solver: Solver,
 
     #[serde(skip)]
-    solution: Option<Vec<CalculatorActions>>,
+    solutions: Option<Vec<Vec<CalculatorActions>>>,
 }
 
 impl Default for CalculatorApp {
@@ -20,7 +20,7 @@ impl Default for CalculatorApp {
         Self {
             all_actions: AllActions::default(),
             solver: Solver::default(),
-            solution: Some(Vec::with_capacity(10)),
+            solutions: Some(Vec::with_capacity(10)),
         }
     }
 }
@@ -55,26 +55,32 @@ impl eframe::App for CalculatorApp {
             .show(ctx, |ui| {
                 ui.add(egui::Label::new("Actions:").wrap_mode(TextWrapMode::Extend));
 
-                for (i, action) in self.solver.actions.clone().iter().enumerate() {
-                    if ui.button(action.as_string()).clicked() {
-                        self.solver.remove_action_idx(i);
+                egui::ScrollArea::vertical().scroll_bar_visibility(ScrollBarVisibility::AlwaysHidden).show(ui, | ui | {
+                    for (i, action) in self.solver.actions.clone().iter().enumerate() {
+                        if ui.button(action.as_string()).clicked() {
+                            self.solver.remove_action_idx(i);
+                        };
                     };
-                }
+                });
             });
 
         egui::SidePanel::right("solution")
             .max_width(73.)
             .resizable(false)
             .show(ctx, |ui| {
-                ui.add(egui::Label::new("Solution:").wrap_mode(TextWrapMode::Extend));
+                ui.add(egui::Label::new("Solutions:").wrap_mode(TextWrapMode::Extend));
+                egui::ScrollArea::vertical().scroll_bar_visibility(ScrollBarVisibility::AlwaysHidden).show(ui, | ui | {
 
-                if let Some(solution) = &self.solution {
-                    for action in solution {
-                        let _ = ui.button(action.as_string());
-                    }
+                if let Some(solutions) = &self.solutions {
+                    for solution in solutions {
+                        for action in solution {
+                            let _ = ui.button(action.as_string());
+                        };
+                        ui.separator();
+                    };
                 };
-                // TODO: multi-solution
-                // TODO: inside scrollable area
+
+                })
             });
 
         egui::CentralPanel::default().show(ctx, |ui| {
@@ -113,7 +119,7 @@ impl eframe::App for CalculatorApp {
                         })
                     });
                     ui.centered_and_justified(|ui| {
-                        if self.solution.is_none() {
+                        if self.solutions.is_none() {
                             ui.label("Unsolvable");
                         };
                     });
@@ -141,17 +147,17 @@ impl eframe::App for CalculatorApp {
                                 ui.centered_and_justified(|ui| {
                                     if ui.button("Clear").clicked() {
                                         self.solver.actions.clear();
-                                        self.solution = Some(Vec::with_capacity(10));
+                                        self.solutions = Some(Vec::with_capacity(10));
                                     };
                                 });
                             });
                             ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                                 ui.centered_and_justified(|ui| {
                                     if ui.button("Solve").clicked() {
-                                        if let Some(solution) = self.solver.evaluate() {
-                                            self.solution = Some(solution);
+                                        if let Some(solutions) = self.solver.evaluate() {
+                                            self.solutions = Some(solutions);
                                         } else {
-                                            self.solution = None;
+                                            self.solutions = None;
                                         };
                                     };
                                 });
