@@ -382,6 +382,28 @@ impl eframe::App for CalculatorApp {
                                 });
                             });
 
+                            ui.allocate_ui_with_layout(
+                                egui::vec2(45., 45.),
+                                egui::Layout::top_down(egui::Align::Center),
+                                |ui| {
+                                    ui.vertical_centered_justified(|ui| {
+                                        ui.add(
+                                            egui::DragValue::new(&mut self.all_actions.increment_buttons.value)
+                                                .speed(0.1)
+                                                .range(1..=99),
+                                        );
+                                    });
+                                    ui.centered_and_justified(|ui| {
+
+                                        if ui.button("[+]n").clicked() {
+                                            self.solver.add_action(CalculatorActions::IncrementButtons(
+                                                self.all_actions.increment_buttons.clone(),
+                                            ))
+                                        };
+                                    });
+                                },
+                            );
+
                             ui.end_row();
                         });
                 });

@@ -2,6 +2,7 @@ use crate::actions::add_value::AddValueAction;
 use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
+use crate::actions::increment_buttons::IncrementButtonAction;
 use crate::actions::mirror::MirrorAction;
 use crate::actions::multiply_by::MultiplyByAction;
 use crate::actions::pow::PowAction;
@@ -28,7 +29,7 @@ pub struct AllActions {
     pub shift_l: ShiftLAction,
     pub shift_r: ShiftRAction,
     pub mirror: MirrorAction,
-    // TODO: value change?
+    pub increment_buttons: IncrementButtonAction,
     // TODO: store
     // TODO: invert 10
     // TODO: portal
@@ -53,6 +54,7 @@ impl Default for AllActions {
             shift_l: ShiftLAction {},
             shift_r: ShiftRAction {},
             mirror: MirrorAction {},
+            increment_buttons: IncrementButtonAction {value: 1},
         }
     }
 }
