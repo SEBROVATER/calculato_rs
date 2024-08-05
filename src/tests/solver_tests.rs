@@ -22,11 +22,11 @@ fn has_solution() {
 
     assert_eq!(
         solution,
-        vec![
+        vec![vec![
             CalculatorActions::MultiplyBy(MultiplyByAction { value: 3 }),
             CalculatorActions::AddValue(AddValueAction { value: -5 }),
             CalculatorActions::MultiplyBy(MultiplyByAction { value: 2 }),
-        ]
+        ]]
     );
 }
 
