@@ -19,9 +19,9 @@ impl ActionEvaluation for ReverseAction {
             };
             if let Some(rad) = input.checked_rem(radix) {
                 if let Some(rev) = reversed.checked_add(rad) {
-                reversed = rev;
+                    reversed = rev;
                 } else {
-                return Err("Add caused overflow");
+                    return Err("Add caused overflow");
                 };
             } else {
                 return Err("Rem caused overflow");

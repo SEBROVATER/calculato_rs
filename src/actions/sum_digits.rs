@@ -28,7 +28,6 @@ impl ActionEvaluation for SumDigitsAction {
             } else {
                 return Err("Add caused overflow");
             };
-
         }
         if accum == input {
             return Err("Sum changed nothing");

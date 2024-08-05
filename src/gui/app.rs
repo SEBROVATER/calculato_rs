@@ -365,8 +365,6 @@ impl eframe::App for CalculatorApp {
                                 });
                             });
 
-
-
                             ui.end_row();
                         });
                 });

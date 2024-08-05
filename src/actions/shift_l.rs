@@ -7,7 +7,6 @@ pub struct ShiftLAction {}
 
 impl ActionEvaluation for ShiftLAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-
         let abs: i32 = if let Some(abs_) = input.checked_abs() {
             abs_
         } else {
@@ -36,8 +35,6 @@ impl ActionEvaluation for ShiftLAction {
         } else {
             return Err("Shift caused unparseable string");
         };
-
-
     }
 }
 

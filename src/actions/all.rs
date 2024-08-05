@@ -8,7 +8,7 @@ use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
 use crate::actions::reverse::ReverseAction;
 use crate::actions::shift_l::ShiftLAction;
-use crate::actions::shift_r::{ShiftRAction};
+use crate::actions::shift_r::ShiftRAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::sum_digits::SumDigitsAction;
 
@@ -25,12 +25,11 @@ pub enum CalculatorActions {
     Reverse(ReverseAction),
     SumDigits(SumDigitsAction),
     ShiftL(ShiftLAction),
-    ShiftR(ShiftRAction)
-    // TODO: mirror
-    // TODO: value change?
-    // TODO: store
-    // TODO: invert 10
-    // TODO: portal
+    ShiftR(ShiftRAction), // TODO: mirror
+                          // TODO: value change?
+                          // TODO: store
+                          // TODO: invert 10
+                          // TODO: portal
 }
 
 impl CalculatorActions {
