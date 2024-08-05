@@ -15,6 +15,9 @@ impl ActionEvaluation for AddValueAction {
             if out == input {
                 return Err("Add changed nothing");
             }
+            if out > 999999 || out < -99999 {
+                return Err("Intermediate result is bigger than 999999");
+            };
             return Ok(out);
         }
         Err("Adding caused overflow")

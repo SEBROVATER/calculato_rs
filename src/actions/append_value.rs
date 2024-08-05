@@ -10,12 +10,15 @@ pub struct AppendValueAction {
 
 impl ActionEvaluation for AppendValueAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let result = (String::new() + &input.to_string() + &self.value.to_string()).parse::<i32>();
-        if let Ok(output) = result {
-            if output == input {
+        let output = (String::new() + &input.to_string() + &self.value.to_string()).parse::<i32>();
+        if let Ok(out) = output {
+            if out == input {
                 return Err("Append changed nothing");
             };
-            return Ok(output);
+            if out > 999999 || out < -99999 {
+                return Err("Intermediate result is bigger than 999999");
+            };
+            return Ok(out);
         };
         Err("Insert caused unparseable string")
     }
