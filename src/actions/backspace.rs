@@ -6,8 +6,14 @@ use std::fmt::Display;
 pub struct BackspaceAction {}
 impl ActionEvaluation for BackspaceAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = input / 10;
-        Ok(output)
+        let output = input.checked_div(10);
+        if let Some(out) = output {
+            if out == input {
+                return Err("Backspace changed nothing");
+            }
+            return Ok(out);
+        }
+        Err("Div by 10 caused overflow")
     }
 }
 impl Display for BackspaceAction {

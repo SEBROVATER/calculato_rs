@@ -7,8 +7,13 @@ pub struct SignInvAction {}
 
 impl ActionEvaluation for SignInvAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = -input;
-        Ok(output)
+        if let Some(out) = input.checked_neg() {
+            if out == input {
+                return Err("SignInv changed nothing");
+            }
+            return Ok(out);
+        };
+        Err("Negation caused overflow")
     }
 }
 
@@ -26,7 +31,7 @@ mod tests {
     fn sign_inv_zero() {
         let action = SignInvAction {};
         let res = action.eval(0);
-        assert_eq!(res, Ok(0));
+        assert_eq!(res, Err("SignInv changed nothing"));
     }
 
     #[test]

@@ -22,7 +22,7 @@ pub enum CalculatorActions {
     SignInv(SignInvAction),
     Reverse(ReverseAction),
     SumDigits(SumDigitsAction),
-    // TODO: shift
+    // TODO: shift < and >
     // TODO: mirror
     // TODO: value change?
     // TODO: store

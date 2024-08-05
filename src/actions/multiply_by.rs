@@ -10,8 +10,14 @@ pub struct MultiplyByAction {
 
 impl ActionEvaluation for MultiplyByAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = input * self.value;
-        Ok(output)
+        let output = input.checked_mul(self.value);
+        if let Some(out) = output {
+            if out == input {
+                return Err("Mul changed nothing");
+            }
+            return Ok(out);
+        };
+        Err("Mul caused overflow")
     }
 }
 
@@ -42,6 +48,6 @@ mod tests {
     fn multiply_with_overflow() {
         let action = MultiplyByAction { value: i32::MAX };
         let res = action.eval(i32::MAX);
-        assert_eq!(res, Ok(-44));
+        assert_eq!(res, Err("Mul caused overflow"));
     }
 }

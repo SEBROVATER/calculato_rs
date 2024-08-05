@@ -10,8 +10,14 @@ pub struct AddValueAction {
 
 impl ActionEvaluation for AddValueAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = input + self.value;
-        Ok(output)
+        let output = input.checked_add(self.value);
+        if let Some(out) = output {
+            if out == input {
+                return Err("Add changed nothing");
+            }
+            return Ok(out);
+        }
+        Err("Adding caused overflow")
     }
 }
 

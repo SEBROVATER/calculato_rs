@@ -12,10 +12,26 @@ impl ActionEvaluation for SumDigitsAction {
 
         let mut accum: i32 = 0;
         while div != 0 {
-            let res: i32 = div / 10;
-            rem = div % 10;
-            div = res;
-            accum += rem;
+            if let Some(res_) = div.checked_div(10) {
+                if let Some(rem_) = div.checked_rem(10) {
+                    rem = rem_;
+                } else {
+                    return Err("Rem caused overflow");
+                };
+                div = res_;
+            } else {
+                return Err("Div caused overflow");
+            };
+
+            if let Some(accum_) = accum.checked_add(rem) {
+                accum = accum_;
+            } else {
+                return Err("Add caused overflow");
+            };
+
+        }
+        if accum == input {
+            return Err("Sum changed nothing");
         }
         Ok(accum)
     }

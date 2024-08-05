@@ -11,10 +11,16 @@ pub struct DivideByAction {
 impl ActionEvaluation for DivideByAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
         if input as f64 % self.value as f64 != 0. {
-            return Err("Result cant be even");
+            return Err("Div creates reminder");
         }
-        let output = input / self.value;
-        Ok(output)
+        let output = input.checked_div(self.value);
+        if let Some(out) = output {
+            if out == input {
+                return Err("Div changed nothing");
+            }
+            return Ok(out);
+        }
+        Err("Div caused overflow")
     }
 }
 
@@ -32,19 +38,19 @@ mod tests {
     fn divide_by_zero() {
         let action = DivideByAction { value: 4 };
         let res = action.eval(11);
-        assert_eq!(res, Err("Result cant be even"));
+        assert_eq!(res, Err("Div creates reminder"));
     }
     #[test]
     fn divide_zero() {
         let action = DivideByAction { value: 4 };
         let res = action.eval(0);
-        assert_eq!(res, Ok(0));
+        assert_eq!(res, Err("Div changed nothing"));
     }
     #[test]
     fn divide_with_rem() {
         let action = DivideByAction { value: 4 };
         let res = action.eval(1);
-        assert_eq!(res, Err("Result cant be even"));
+        assert_eq!(res, Err("Div creates reminder"));
     }
     #[test]
     fn divide_by_positive() {

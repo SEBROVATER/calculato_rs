@@ -11,3 +11,5 @@ pub mod sum_digits;
 pub mod all;
 pub mod pow;
 pub mod reverse;
+mod shift_r;
+mod shift_l;

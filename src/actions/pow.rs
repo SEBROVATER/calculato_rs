@@ -5,16 +5,19 @@ use crate::actions::eval::ActionEvaluation;
 
 #[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct PowAction {
-    pub value: i32,
+    pub value: u32,
 }
 
 impl ActionEvaluation for PowAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = input.checked_pow(self.value.abs() as u32);
+        let output = input.checked_pow(self.value);
         if let Some(out) = output {
+            if out == input {
+                return Err("Pow changed nothing");
+            }
             return Ok(out);
         };
-        Err("Overflow after pow")
+        Err("Pow caused overflow")
     }
 }
 
@@ -32,7 +35,7 @@ mod tests {
     fn pow_zero() {
         let action = PowAction { value: 11 };
         let res = action.eval(0);
-        assert_eq!(res, Ok(0));
+        assert_eq!(res, Err("Pow changed nothing"));
     }
 
     #[test]

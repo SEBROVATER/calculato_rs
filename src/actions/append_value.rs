@@ -5,17 +5,20 @@ use crate::actions::eval::ActionEvaluation;
 
 #[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct AppendValueAction {
-    pub value: i32,
+    pub value: u32,
 }
 
 impl ActionEvaluation for AppendValueAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
         let result =
-            (String::new() + &input.to_string() + &self.value.abs().to_string()).parse::<i32>();
+            (String::new() + &input.to_string() + &self.value.to_string()).parse::<i32>();
         if let Ok(output) = result {
+            if output == input {
+                return Err("Append changed nothing");
+            };
             return Ok(output);
         };
-        Err("Can't insert value")
+        Err("Insert caused unparseable string")
     }
 }
 impl Display for AppendValueAction {
