@@ -74,6 +74,7 @@ impl eframe::App for CalculatorApp {
                     }
                 };
                 // TODO: multi-solution
+                // TODO: inside scrollable area
             });
 
         egui::CentralPanel::default().show(ctx, |ui| {
