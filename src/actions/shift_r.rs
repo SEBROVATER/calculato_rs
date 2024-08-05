@@ -3,9 +3,9 @@ use std::fmt;
 use std::fmt::Display;
 
 #[derive(Debug, Clone, PartialEq, serde::Deserialize, serde::Serialize)]
-pub struct ShiftLAction {}
+pub struct ShiftRAction {}
 
-impl ActionEvaluation for ShiftLAction {
+impl ActionEvaluation for ShiftRAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
 
         let abs: i32 = if let Some(abs_) = input.checked_abs() {
@@ -41,7 +41,7 @@ impl ActionEvaluation for ShiftLAction {
     }
 }
 
-impl Display for ShiftLAction {
+impl Display for ShiftRAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Shift <")
     }
@@ -53,27 +53,27 @@ mod tests {
 
     #[test]
     fn shift_r_zero() {
-        let action = ShiftLAction {};
+        let action = ShiftRAction {};
         let res = action.eval(0);
         assert_eq!(res, Err("Shift changed nothing"));
     }
 
     #[test]
     fn shift_r_one() {
-        let action = ShiftLAction {};
+        let action = ShiftRAction {};
         let res = action.eval(1);
         assert_eq!(res, Err("Shift changed nothing"));
     }
 
     #[test]
     fn shift_r_negative() {
-        let action = ShiftLAction {};
+        let action = ShiftRAction {};
         let res = action.eval(-134);
         assert_eq!(res, Ok(-413));
     }
     #[test]
     fn shift_r_positive() {
-        let action = ShiftLAction {};
+        let action = ShiftRAction {};
         let res = action.eval(134);
         assert_eq!(res, Ok(413));
     }
