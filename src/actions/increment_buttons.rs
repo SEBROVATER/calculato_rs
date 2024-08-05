@@ -62,14 +62,9 @@ impl IncrementButtonAction {
                     };
                 },
                 CalculatorActions::ReplaceValues(ref mut action) => {
-                    let mut to_add_trg = self.value as i64;
-                    if action.repl_trg < 0 {
-                        to_add_trg = -to_add_trg;
-                    };
-                    let mut to_add_with = self.value as i64;
-                    if action.repl_with < 0 {
-                        to_add_with = -to_add_with;
-                    };
+                    let to_add_trg = self.value as i64;
+                    let to_add_with = self.value as i64;
+
                     if let Some(new_trg_value) = (action.repl_trg as i64).checked_add(to_add_trg) {
                         if  (new_trg_value < u32::MIN as i64) || (new_trg_value > u32::MAX as i64) {
                             return Err("Add caused overflow");
@@ -88,10 +83,8 @@ impl IncrementButtonAction {
                     };
                 },
                 CalculatorActions::Pow(ref mut action) => {
-                    let mut to_add = self.value as i64;
-                    if action.value < 0 {
-                        to_add = -to_add;
-                    };
+                    let to_add = self.value as i64;
+
                     if let Some(new_value) = (action.value as i64).checked_add(to_add) {
                         if  (new_value < u32::MIN as i64) || (new_value > u32::MAX as i64) {
                             return Err("Add caused overflow");
