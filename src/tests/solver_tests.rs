@@ -50,5 +50,5 @@ fn correct_solution() {
     ];
 
     let out = solver.evaluate_one_combination(solution);
-    assert!(out);
+    assert!(out.is_some());
 }
