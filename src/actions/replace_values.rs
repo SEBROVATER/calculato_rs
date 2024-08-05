@@ -16,9 +16,14 @@ impl ActionEvaluation for ReplaceValuesAction {
         let output = input
             .to_string()
             .replace(&repl_trg, &repl_with)
-            .parse::<i32>()
-            .unwrap();
-        Ok(output)
+            .parse::<i32>();
+        if let Ok(out) = output {
+            if out == input {
+                return Err("Action do nothing");
+            };
+            return Ok(out);
+        };
+        Err("Can't replace values")
     }
 }
 impl Display for ReplaceValuesAction {
