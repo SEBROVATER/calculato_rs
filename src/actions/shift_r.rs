@@ -43,7 +43,7 @@ impl ActionEvaluation for ShiftRAction {
 
 impl Display for ShiftRAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Shift <")
+        write!(f, "Shift >")
     }
 }
 
