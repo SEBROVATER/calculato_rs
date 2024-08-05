@@ -38,4 +38,10 @@ mod tests {
         let res = action.eval(11);
         assert_eq!(res, Ok(-44));
     }
+    #[test]
+    fn multiply_with_overflow() {
+        let action = MultiplyByAction { value: i32::MAX };
+        let res = action.eval(i32::MAX);
+        assert_eq!(res, Ok(-44));
+    }
 }
