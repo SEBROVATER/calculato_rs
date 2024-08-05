@@ -10,8 +10,11 @@ pub struct PowAction {
 
 impl ActionEvaluation for PowAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let output = input.pow(self.value.abs() as u32);
-        Ok(output)
+        let output = input.checked_pow(self.value.abs() as u32);
+        if let Some(out) = output {
+            return Ok(out);
+        };
+        Err("Overflow after pow")
     }
 }
 
