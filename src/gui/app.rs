@@ -345,6 +345,27 @@ impl eframe::App for CalculatorApp {
                                 });
                             });
 
+                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                                ui.centered_and_justified(|ui| {
+                                    if ui.button("Shift <").clicked() {
+                                        self.solver.add_action(CalculatorActions::ShiftL(
+                                            self.all_actions.shift_l.clone(),
+                                        ))
+                                    };
+                                });
+                            });
+                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                                ui.centered_and_justified(|ui| {
+                                    if ui.button("Shift >").clicked() {
+                                        self.solver.add_action(CalculatorActions::ShiftR(
+                                            self.all_actions.shift_r.clone(),
+                                        ))
+                                    };
+                                });
+                            });
+
+
+
                             ui.end_row();
                         });
                 });
