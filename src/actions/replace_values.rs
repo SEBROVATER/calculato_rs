@@ -63,6 +63,7 @@ mod tests {
             repl_with: 31,
         };
         let res = action.eval(146);
-        assert_eq!(res, Ok(146));
+        assert_eq!(res, Err("Action do nothing")
+        );
     }
 }
