@@ -3,6 +3,7 @@ use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
 use crate::actions::eval::ActionEvaluation;
+use crate::actions::increment_buttons::IncrementButtonAction;
 use crate::actions::mirror::MirrorAction;
 use crate::actions::multiply_by::MultiplyByAction;
 use crate::actions::pow::PowAction;
@@ -28,11 +29,10 @@ pub enum CalculatorActions {
     ShiftL(ShiftLAction),
     ShiftR(ShiftRAction),
     Mirror(MirrorAction),
-    // TODO: mirror
-                          // TODO: value change?
-                          // TODO: store
-                          // TODO: invert 10
-                          // TODO: portal
+    IncrementButtons(IncrementButtonAction),
+      // TODO: store
+      // TODO: invert 10
+      // TODO: portal
 }
 
 impl CalculatorActions {
@@ -51,6 +51,7 @@ impl CalculatorActions {
             Self::ShiftL(action) => format!("{}", action),
             Self::ShiftR(action) => format!("{}", action),
             Self::Mirror(action) => format!("{}", action),
+            Self::IncrementButtons(action) => format!("{}", action),
         }
     }
 
@@ -69,6 +70,7 @@ impl CalculatorActions {
             Self::ShiftL(action) => action.eval(input),
             Self::ShiftR(action) => action.eval(input),
             Self::Mirror(action) => action.eval(input),
+            Self::IncrementButtons(action) => action.eval(input),
         }
     }
 }

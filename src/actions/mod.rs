@@ -13,3 +13,4 @@ pub mod shift_l;
 pub mod shift_r;
 pub mod sign_inv;
 pub mod sum_digits;
+pub mod increment_buttons;
