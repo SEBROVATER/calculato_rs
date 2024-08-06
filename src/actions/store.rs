@@ -14,8 +14,6 @@ pub struct UnstoreValueAction {
     pub value: Rc<RefCell<Option<u32>>>,
 }
 
-
-
 impl ActionEvaluation for StoreValueAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
         if input < 0 {
@@ -31,7 +29,10 @@ impl ActionEvaluation for UnstoreValueAction {
         if self.value.borrow().is_none() {
             return Err("Unstore can't work before store");
         };
-        if let Ok(out) = (String::new() + &input.to_string() + &(*self.value.borrow()).unwrap().to_string()).parse::<i32>() {
+        if let Ok(out) =
+            (String::new() + &input.to_string() + &(*self.value.borrow()).unwrap().to_string())
+                .parse::<i32>()
+        {
             if out == input {
                 return Err("Append changed nothing");
             };
@@ -46,7 +47,6 @@ impl ActionEvaluation for UnstoreValueAction {
 
 impl Display for StoreValueAction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-
         write!(f, "Store")
     }
 }
@@ -67,7 +67,9 @@ mod tests {
 
     #[test]
     fn store_positive() {
-        let action = StoreValueAction { value: Rc::new(RefCell::new(None)) };
+        let action = StoreValueAction {
+            value: Rc::new(RefCell::new(None)),
+        };
         let res = action.eval(13);
         assert_eq!(res, Ok(13));
         assert_eq!(*action.value.borrow(), Some(13u32));
@@ -75,8 +77,12 @@ mod tests {
 
     #[test]
     fn unstore_positive() {
-        let action = StoreValueAction { value: Rc::new(RefCell::new(Some(22))) };
-        let action2 = UnstoreValueAction {value: action.value.clone()};
+        let action = StoreValueAction {
+            value: Rc::new(RefCell::new(Some(22))),
+        };
+        let action2 = UnstoreValueAction {
+            value: action.value.clone(),
+        };
         let res = action2.eval(13);
         assert_eq!(res, Ok(1322));
         let _ = action.eval(14);
@@ -86,8 +92,12 @@ mod tests {
 
     #[test]
     fn append_to_zero() {
-        let action = StoreValueAction { value: Rc::new(RefCell::new(Some(22))) };
-        let action2 = UnstoreValueAction {value: action.value.clone()};
+        let action = StoreValueAction {
+            value: Rc::new(RefCell::new(Some(22))),
+        };
+        let action2 = UnstoreValueAction {
+            value: action.value.clone(),
+        };
 
         let res = action2.eval(0);
         assert_eq!(res, Ok(22));

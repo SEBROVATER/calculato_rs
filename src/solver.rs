@@ -1,8 +1,8 @@
+use crate::actions::all::CalculatorActions;
+use crate::actions::store::{StoreValueAction, UnstoreValueAction};
+use itertools::Itertools;
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::actions::all::CalculatorActions;
-use itertools::Itertools;
-use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct Solver {
@@ -36,7 +36,7 @@ impl Solver {
                 } else {
                     self.actions.push(action);
                 };
-            },
+            }
             CalculatorActions::UnstoreValue(_) => {
                 if self.actions.iter().any(|s| match s {
                     CalculatorActions::UnstoreValue(_) => true,
@@ -46,11 +46,9 @@ impl Solver {
                 } else {
                     self.actions.push(action);
                 };
-            },
-            _ => self.actions.push(action)
+            }
+            _ => self.actions.push(action),
         };
-
-
     }
     pub fn remove_action(&mut self, _action: CalculatorActions) {
         todo!("Find by comparison and remove");
@@ -65,12 +63,11 @@ impl Solver {
         if self.input == self.output {
             return None;
         };
-        let solutions:Vec<Vec<CalculatorActions>> = (0..self.moves)
+        let solutions: Vec<Vec<CalculatorActions>> = (0..self.moves)
             .map(|_| &self.actions)
             .multi_cartesian_product()
-            .filter_map(|actions| {
-                self.evaluate_one_combination(&actions)
-            }).collect();
+            .filter_map(|actions| self.evaluate_one_combination(&actions))
+            .collect();
 
         if solutions.len() == 0 {
             return None;
@@ -84,23 +81,31 @@ impl Solver {
             if let CalculatorActions::StoreValue(_) = action {
                 // let store_value: Rc<RefCell<Option<u32>>> = Rc::new((*store_action.value).clone());
                 store_value = Some(Rc::new(RefCell::new(None)));
-                actions_copy.push(CalculatorActions::StoreValue(StoreValueAction { value: store_value.as_ref().unwrap().clone() }));
+                actions_copy.push(CalculatorActions::StoreValue(StoreValueAction {
+                    value: store_value.as_ref().unwrap().clone(),
+                }));
             } else if let CalculatorActions::UnstoreValue(_) = action {
-                if store_value.is_none(){ // unsolvable case
+                if store_value.is_none() {
+                    // unsolvable case
 
-                actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction { value: Rc::new(RefCell::new(None)) }));
+                    actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction {
+                        value: Rc::new(RefCell::new(None)),
+                    }));
                 } else {
-                actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction { value: store_value.as_ref().unwrap().clone() }));
-
+                    actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction {
+                        value: store_value.as_ref().unwrap().clone(),
+                    }));
                 };
-
             } else {
                 actions_copy.push((*action).clone());
             };
         }
         actions_copy
     }
-    pub fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> Option<Vec<CalculatorActions>> {
+    pub fn evaluate_one_combination(
+        &self,
+        actions: &Vec<&CalculatorActions>,
+    ) -> Option<Vec<CalculatorActions>> {
         let mut start = self.input;
 
         let mut actions_copy: Vec<CalculatorActions> = Self::clone_actions(actions);
@@ -109,11 +114,10 @@ impl Solver {
             return None; // currently impossible case
         };
         for i in 0..actions_copy.len() {
-            let (left_mid, right) = actions_copy.split_at_mut(i+1);
+            let (left_mid, right) = actions_copy.split_at_mut(i + 1);
             if let CalculatorActions::IncrementButtons(action_) = left_mid.get(i).unwrap() {
                 if let Err(_) = action_.eval_on_actions(right) {
                     return None;
-
                 };
             };
             match actions_copy.get(i).unwrap().eval(start) {
@@ -126,7 +130,6 @@ impl Solver {
         } else {
             None
         }
-
     }
     pub fn build(input: i32, output: i32, moves: u8) -> Solver {
         Solver {

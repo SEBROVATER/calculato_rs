@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-use std::rc::Rc;
 use crate::actions::add_value::AddValueAction;
 use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
@@ -15,6 +13,8 @@ use crate::actions::shift_r::ShiftRAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 use crate::actions::sum_digits::SumDigitsAction;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
@@ -68,10 +68,14 @@ impl Default for AllActions {
             shift_l: ShiftLAction {},
             shift_r: ShiftRAction {},
             mirror: MirrorAction {},
-            increment_buttons: IncrementButtonAction {value: 1},
+            increment_buttons: IncrementButtonAction { value: 1 },
 
-            store_value: StoreValueAction {value: store_value.clone()},
-            unstore_value: UnstoreValueAction {value: store_value.clone()},
+            store_value: StoreValueAction {
+                value: store_value.clone(),
+            },
+            unstore_value: UnstoreValueAction {
+                value: store_value.clone(),
+            },
         }
     }
 }

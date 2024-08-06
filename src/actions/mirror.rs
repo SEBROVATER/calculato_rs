@@ -1,4 +1,3 @@
-
 use crate::actions::eval::ActionEvaluation;
 use std::fmt;
 use std::fmt::Display;

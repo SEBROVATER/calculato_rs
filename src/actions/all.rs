@@ -33,9 +33,9 @@ pub enum CalculatorActions {
     IncrementButtons(IncrementButtonAction),
     StoreValue(StoreValueAction),
     UnstoreValue(UnstoreValueAction),
-      // TODO: store
-      // TODO: invert 10
-      // TODO: portal
+    // TODO: store
+    // TODO: invert 10
+    // TODO: portal
 }
 
 impl CalculatorActions {
