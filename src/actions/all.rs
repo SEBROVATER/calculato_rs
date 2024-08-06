@@ -12,6 +12,7 @@ use crate::actions::reverse::ReverseAction;
 use crate::actions::shift_l::ShiftLAction;
 use crate::actions::shift_r::ShiftRAction;
 use crate::actions::sign_inv::SignInvAction;
+use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 use crate::actions::sum_digits::SumDigitsAction;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -30,6 +31,8 @@ pub enum CalculatorActions {
     ShiftR(ShiftRAction),
     Mirror(MirrorAction),
     IncrementButtons(IncrementButtonAction),
+    StoreValue(StoreValueAction),
+    UnstoreValue(UnstoreValueAction),
       // TODO: store
       // TODO: invert 10
       // TODO: portal
@@ -52,6 +55,8 @@ impl CalculatorActions {
             Self::ShiftR(action) => format!("{}", action),
             Self::Mirror(action) => format!("{}", action),
             Self::IncrementButtons(action) => format!("{}", action),
+            Self::StoreValue(action) => format!("{}", action),
+            Self::UnstoreValue(action) => format!("{}", action),
         }
     }
 
@@ -71,6 +76,8 @@ impl CalculatorActions {
             Self::ShiftR(action) => action.eval(input),
             Self::Mirror(action) => action.eval(input),
             Self::IncrementButtons(action) => action.eval(input),
+            Self::StoreValue(action) => action.eval(input),
+            Self::UnstoreValue(action) => action.eval(input),
         }
     }
 }

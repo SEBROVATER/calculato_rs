@@ -1,5 +1,8 @@
+use std::cell::RefCell;
+use std::rc::Rc;
 use crate::actions::all::CalculatorActions;
 use itertools::Itertools;
+use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct Solver {
@@ -23,7 +26,31 @@ impl Default for Solver {
 
 impl Solver {
     pub fn add_action(&mut self, action: CalculatorActions) {
-        self.actions.push(action);
+        match action {
+            CalculatorActions::StoreValue(_) => {
+                if self.actions.iter().any(|s| match s {
+                    CalculatorActions::StoreValue(_) => true,
+                    _ => false,
+                }) {
+                    return;
+                } else {
+                    self.actions.push(action);
+                };
+            },
+            CalculatorActions::UnstoreValue(_) => {
+                if self.actions.iter().any(|s| match s {
+                    CalculatorActions::UnstoreValue(_) => true,
+                    _ => false,
+                }) {
+                    return;
+                } else {
+                    self.actions.push(action);
+                };
+            },
+            _ => self.actions.push(action)
+        };
+
+
     }
     pub fn remove_action(&mut self, _action: CalculatorActions) {
         todo!("Find by comparison and remove");
@@ -38,30 +65,49 @@ impl Solver {
         if self.input == self.output {
             return None;
         };
-        let it = (0..self.moves)
+        let solutions:Vec<Vec<CalculatorActions>> = (0..self.moves)
             .map(|_| &self.actions)
             .multi_cartesian_product()
             .filter_map(|actions| {
-                if let Some(solution) = self.evaluate_one_combination(&actions) {
-                    Some(solution)
-                } else {
-                    None
-                }
-            });
-        let mut solutions:Vec<Vec<CalculatorActions>> = Vec::with_capacity(5);
-        for solution in it {
-            solutions.push(solution);
-        };
+                self.evaluate_one_combination(&actions)
+            }).collect();
+
         if solutions.len() == 0 {
             return None;
         }
         Some(solutions)
     }
+    pub fn clone_actions(actions: &Vec<&CalculatorActions>) -> Vec<CalculatorActions> {
+        let mut actions_copy: Vec<CalculatorActions> = Vec::with_capacity(actions.len());
+        let mut store_value: Option<Rc<RefCell<Option<u32>>>> = None;
+        for action in actions {
+            if let CalculatorActions::StoreValue(_) = action {
+                // let store_value: Rc<RefCell<Option<u32>>> = Rc::new((*store_action.value).clone());
+                store_value = Some(Rc::new(RefCell::new(None)));
+                actions_copy.push(CalculatorActions::StoreValue(StoreValueAction { value: store_value.as_ref().unwrap().clone() }));
+            } else if let CalculatorActions::UnstoreValue(_) = action {
+                if store_value.is_none(){ // unsolvable case
+
+                actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction { value: Rc::new(RefCell::new(None)) }));
+                } else {
+                actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction { value: store_value.as_ref().unwrap().clone() }));
+
+                };
+
+            } else {
+                actions_copy.push((*action).clone());
+            };
+        }
+        actions_copy
+    }
     pub fn evaluate_one_combination(&self, actions: &Vec<&CalculatorActions>) -> Option<Vec<CalculatorActions>> {
         let mut start = self.input;
-        let mut actions_copy: Vec<CalculatorActions> =
-            actions.iter().map(|&action| action.clone()).collect();
 
+        let mut actions_copy: Vec<CalculatorActions> = Self::clone_actions(actions);
+
+        if actions.len() > self.moves as usize {
+            return None; // currently impossible case
+        };
         for i in 0..actions_copy.len() {
             let (left_mid, right) = actions_copy.split_at_mut(i+1);
             if let CalculatorActions::IncrementButtons(action_) = left_mid.get(i).unwrap() {
