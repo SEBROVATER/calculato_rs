@@ -403,7 +403,18 @@ impl eframe::App for CalculatorApp {
                                     });
                                 },
                             );
-
+                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                                ui.centered_and_justified(|ui| {
+                                    if ui.button("Store").clicked() {
+                                        self.solver.add_action(CalculatorActions::StoreValue(
+                                            self.all_actions.store_value.clone(),
+                                        ));
+                                        self.solver.add_action(CalculatorActions::UnstoreValue(
+                                            self.all_actions.unstore_value.clone(),
+                                        ));
+                                    };
+                                });
+                            });
                             ui.end_row();
                             // TODO: display name for button dynamically
                         });

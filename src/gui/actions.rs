@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+use std::rc::Rc;
 use crate::actions::add_value::AddValueAction;
 use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
@@ -11,6 +13,7 @@ use crate::actions::reverse::ReverseAction;
 use crate::actions::shift_l::ShiftLAction;
 use crate::actions::shift_r::ShiftRAction;
 use crate::actions::sign_inv::SignInvAction;
+use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 use crate::actions::sum_digits::SumDigitsAction;
 
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -37,13 +40,17 @@ pub struct AllActions {
     #[serde(skip)]
     pub mirror: MirrorAction,
     pub increment_buttons: IncrementButtonAction,
-    // TODO: store
+    #[serde(skip)]
+    pub store_value: StoreValueAction,
+    #[serde(skip)]
+    pub unstore_value: UnstoreValueAction,
     // TODO: invert 10
     // TODO: portal
 }
 
 impl Default for AllActions {
     fn default() -> Self {
+        let store_value: Rc<RefCell<Option<u32>>> = Rc::new(RefCell::new(None));
         Self {
             add_value: AddValueAction { value: 0 },
             divide_by: DivideByAction { value: 1 },
@@ -62,6 +69,9 @@ impl Default for AllActions {
             shift_r: ShiftRAction {},
             mirror: MirrorAction {},
             increment_buttons: IncrementButtonAction {value: 1},
+
+            store_value: StoreValueAction {value: store_value.clone()},
+            unstore_value: UnstoreValueAction {value: store_value.clone()},
         }
     }
 }
