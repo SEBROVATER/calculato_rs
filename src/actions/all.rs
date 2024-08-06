@@ -14,7 +14,7 @@ use crate::actions::shift_r::ShiftRAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::sum_digits::SumDigitsAction;
 
-#[derive(serde::Deserialize, serde::Serialize, Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum CalculatorActions {
     AddValue(AddValueAction),
     MultiplyBy(MultiplyByAction),

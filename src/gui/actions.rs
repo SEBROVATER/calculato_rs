@@ -19,15 +19,22 @@ pub struct AllActions {
     pub add_value: AddValueAction,
     pub divide_by: DivideByAction,
     pub multiply_by: MultiplyByAction,
+    #[serde(skip)]
     pub backspace: BackspaceAction,
     pub append_value: AppendValueAction,
     pub replace_values: ReplaceValuesAction,
     pub pow: PowAction,
+    #[serde(skip)]
     pub sign_inv: SignInvAction,
+    #[serde(skip)]
     pub reverse: ReverseAction,
+    #[serde(skip)]
     pub sum_digits: SumDigitsAction,
+    #[serde(skip)]
     pub shift_l: ShiftLAction,
+    #[serde(skip)]
     pub shift_r: ShiftRAction,
+    #[serde(skip)]
     pub mirror: MirrorAction,
     pub increment_buttons: IncrementButtonAction,
     // TODO: store
