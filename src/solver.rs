@@ -79,15 +79,15 @@ impl Solver {
                     value: store_value.as_ref().unwrap().clone(),
                 }));
             } else if let CalculatorActions::UnstoreValue(_) = action {
-                if store_value.is_none() {
+                if let Some(value) = &store_value {
                     // unsolvable case
 
                     actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction {
-                        value: Rc::new(RefCell::new(None)),
+                        value: (*value).clone(),
                     }));
                 } else {
                     actions_copy.push(CalculatorActions::UnstoreValue(UnstoreValueAction {
-                        value: store_value.as_ref().unwrap().clone(),
+                        value: Rc::new(RefCell::new(None)),
                     }));
                 };
             } else {
