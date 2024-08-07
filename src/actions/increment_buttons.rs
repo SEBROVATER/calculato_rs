@@ -102,7 +102,7 @@ impl IncrementButtonAction {
                 _ => {}
             }
         }
-        return Ok(());
+        Ok(())
     }
 }
 
