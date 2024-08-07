@@ -28,22 +28,12 @@ impl Solver {
     pub fn add_action(&mut self, action: CalculatorActions) {
         match action {
             CalculatorActions::StoreValue(_) => {
-                if self.actions.iter().any(|s| match s {
-                    CalculatorActions::StoreValue(_) => true,
-                    _ => false,
-                }) {
-                    return;
-                } else {
+                if !self.actions.iter().any(|s| matches!(s, CalculatorActions::StoreValue(_))) {
                     self.actions.push(action);
                 };
             }
             CalculatorActions::UnstoreValue(_) => {
-                if self.actions.iter().any(|s| match s {
-                    CalculatorActions::UnstoreValue(_) => true,
-                    _ => false,
-                }) {
-                    return;
-                } else {
+                if !self.actions.iter().any(|s| matches!(s, CalculatorActions::UnstoreValue(_))) {
                     self.actions.push(action);
                 };
             }
