@@ -1,8 +1,12 @@
-use crate::actions::all::CalculatorActions;
-use crate::actions::store::{StoreValueAction, UnstoreValueAction};
-use itertools::Itertools;
 use std::cell::RefCell;
 use std::rc::Rc;
+
+use itertools::Itertools;
+
+use crate::actions::all::CalculatorActions;
+use crate::actions::eval::ActionEvaluation;
+use crate::actions::portal::PortalAction;
+use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct Solver {
@@ -11,6 +15,7 @@ pub struct Solver {
     pub moves: u8,
     #[serde(skip)]
     pub actions: Vec<CalculatorActions>,
+    pub portals: Option<PortalAction>
 }
 
 impl Default for Solver {
@@ -20,6 +25,7 @@ impl Default for Solver {
             output: 0,
             moves: 1,
             actions: Vec::with_capacity(10),
+            portals: None,
         }
     }
 }
@@ -37,10 +43,18 @@ impl Solver {
                     self.actions.push(action);
                 };
             }
+            CalculatorActions::Portal(action_) => {
+                self.portals = Some(action_.clone());
+            },
             _ => self.actions.push(action),
         };
     }
-    pub fn remove_action(&mut self, _action: CalculatorActions) {
+    pub fn remove_action(&mut self, action: CalculatorActions) {
+        if let CalculatorActions::Portal(_) = action {
+            self.portals = None;
+            return;
+        };
+
         todo!("Find by comparison and remove");
     }
     pub fn remove_action_idx(&mut self, idx: usize) {
@@ -108,6 +122,13 @@ impl Solver {
             return None; // currently impossible case
         };
         for i in 0..actions_copy.len() {
+            if let Some(portal_action) = &self.portals {
+                if let Ok(value) = portal_action.eval(start) {
+                    start = value;
+                } else {
+                    return None;
+                };
+            };
             let (left_mid, right) = actions_copy.split_at_mut(i + 1);
             if let CalculatorActions::IncrementButtons(action_) = left_mid.get(i).unwrap() {
                 if action_.eval_on_actions(right).is_err() {
@@ -117,7 +138,15 @@ impl Solver {
             match actions_copy.get(i).unwrap().eval(start) {
                 Ok(output) => start = output,
                 Err(_) => return None,
-            }
+            };
+
+            if let Some(portal_action) = &self.portals {
+                if let Ok(value) = portal_action.eval(start) {
+                    start = value;
+                } else {
+                    return None;
+                };
+            };
         }
         if start == self.output {
             Some(actions_copy)
@@ -131,6 +160,7 @@ impl Solver {
             output,
             moves,
             actions: Vec::with_capacity(moves as usize),
+            portals: None,
         }
     }
 }
