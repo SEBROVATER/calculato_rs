@@ -129,311 +129,322 @@ impl eframe::App for CalculatorApp {
             );
             ui.separator();
 
-            egui::ScrollArea::vertical()
-                .scroll_bar_visibility(ScrollBarVisibility::AlwaysHidden)
+
+            egui::Grid::new("main_buttons_grid")
+                .striped(true)
+                .spacing(egui::vec2(10., 10.))
                 .show(ui, |ui| {
-                    egui::Grid::new("buttons_grid")
-                        // .with_row_color(| row_n, item | Some(egui::Color32::DARK_RED))
-                        .striped(true)
-                        .spacing(egui::vec2(10., 10.))
-                        .show(ui, |ui| {
-                            ui.visuals_mut().dark_mode = true;
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Cancel").clicked() {
-                                        self.solver.actions.pop();
-                                    };
-                                });
-                            });
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Clear").clicked() {
-                                        self.solver.actions.clear();
-                                        self.solutions = Some(Vec::with_capacity(10));
-                                    };
-                                });
-                            });
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Solve").clicked() {
-                                        if let Some(solutions) = self.solver.evaluate() {
-                                            self.solutions = Some(solutions);
-                                        } else {
-                                            self.solutions = None;
-                                        };
-                                    };
-                                });
-                            });
-                            ui.end_row();
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    ui.vertical_centered_justified(|ui| {
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.add_value.value,
-                                            )
-                                            .speed(0.2)
-                                            .range(-999..=999),
-                                        );
-                                    });
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("ADD").clicked() {
-                                            self.solver.add_action(CalculatorActions::AddValue(
-                                                self.all_actions.add_value.clone(),
-                                            ))
-                                        };
-                                    });
-                                },
-                            );
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    ui.vertical_centered_justified(|ui| {
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.multiply_by.value,
-                                            )
-                                            .speed(0.2)
-                                            .range(-999..=999),
-                                        );
-                                    });
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("MUL").clicked() {
-                                            self.solver.add_action(CalculatorActions::MultiplyBy(
-                                                self.all_actions.multiply_by.clone(),
-                                            ))
-                                        };
-                                    });
-                                },
-                            );
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    ui.vertical_centered_justified(|ui| {
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.divide_by.value,
-                                            )
-                                            .speed(0.2)
-                                            .range(-99..=99),
-                                        );
-                                    });
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("DIV").clicked() {
-                                            self.solver.add_action(CalculatorActions::DivideBy(
-                                                self.all_actions.divide_by.clone(),
-                                            ))
-                                        };
-                                    });
-                                },
-                            );
-                            ui.end_row();
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("<<").clicked() {
-                                        self.solver.add_action(CalculatorActions::Backspace(
-                                            self.all_actions.backspace.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    ui.vertical_centered_justified(|ui| {
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.append_value.value,
-                                            )
-                                            .speed(0.2)
-                                            .range(0..=999),
-                                        );
-                                    });
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("INSRT").clicked() {
-                                            self.solver.add_action(CalculatorActions::AppendValue(
-                                                self.all_actions.append_value.clone(),
-                                            ))
-                                        };
-                                    });
-                                },
-                            );
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    let width = ui.available_width();
-                                    ui.horizontal(|ui| {
-                                        ui.style_mut().spacing.interact_size.x = (width / 2.) - 1.;
-                                        ui.style_mut().spacing.item_spacing.x = 2.;
-
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.replace_values.repl_trg,
-                                            )
-                                            .speed(0.2)
-                                            .range(-999..=999),
-                                        );
-
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.replace_values.repl_with,
-                                            )
-                                            .speed(0.2)
-                                            .range(-999..=999),
-                                        );
-                                    });
-
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("=>").clicked() {
-                                            self.solver.add_action(
-                                                CalculatorActions::ReplaceValues(
-                                                    self.all_actions.replace_values.clone(),
-                                                ),
-                                            )
-                                        };
-                                    });
-                                },
-                            );
-                            ui.end_row();
-
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    ui.vertical_centered_justified(|ui| {
-                                        ui.add(
-                                            egui::DragValue::new(&mut self.all_actions.pow.value)
-                                                .speed(0.1)
-                                                .range(0..=10),
-                                        );
-                                    });
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("x^n").clicked() {
-                                            self.solver.add_action(CalculatorActions::Pow(
-                                                self.all_actions.pow.clone(),
-                                            ))
-                                        };
-                                    });
-                                },
-                            );
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("+/-").clicked() {
-                                        self.solver.add_action(CalculatorActions::SignInv(
-                                            self.all_actions.sign_inv.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Rvrs").clicked() {
-                                        self.solver.add_action(CalculatorActions::Reverse(
-                                            self.all_actions.reverse.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-                            ui.end_row();
-
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("SUM").clicked() {
-                                        self.solver.add_action(CalculatorActions::SumDigits(
-                                            self.all_actions.sum_digits.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Shift <").clicked() {
-                                        self.solver.add_action(CalculatorActions::ShiftL(
-                                            self.all_actions.shift_l.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Shift >").clicked() {
-                                        self.solver.add_action(CalculatorActions::ShiftR(
-                                            self.all_actions.shift_r.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-
-                            ui.end_row();
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Mirror").clicked() {
-                                        self.solver.add_action(CalculatorActions::Mirror(
-                                            self.all_actions.mirror.clone(),
-                                        ))
-                                    };
-                                });
-                            });
-
-                            ui.allocate_ui_with_layout(
-                                egui::vec2(45., 45.),
-                                egui::Layout::top_down(egui::Align::Center),
-                                |ui| {
-                                    ui.vertical_centered_justified(|ui| {
-                                        ui.add(
-                                            egui::DragValue::new(
-                                                &mut self.all_actions.increment_buttons.value,
-                                            )
-                                            .speed(0.1)
-                                            .range(1..=99),
-                                        );
-                                    });
-                                    ui.centered_and_justified(|ui| {
-                                        if ui.button("[+]n").clicked() {
-                                            self.solver.add_action(
-                                                CalculatorActions::IncrementButtons(
-                                                    self.all_actions.increment_buttons.clone(),
-                                                ),
-                                            )
-                                        };
-                                    });
-                                },
-                            );
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Store").clicked() {
-                                        self.solver.add_action(CalculatorActions::StoreValue(
-                                            self.all_actions.store_value.clone(),
-                                        ));
-                                        self.solver.add_action(CalculatorActions::UnstoreValue(
-                                            self.all_actions.unstore_value.clone(),
-                                        ));
-                                    };
-                                });
-                            });
-                            ui.end_row();
-                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                                ui.centered_and_justified(|ui| {
-                                    if ui.button("Inv10").clicked() {
-                                        self.solver.add_action(CalculatorActions::Inv10(
-                                            self.all_actions.inv10.clone(),
-                                        ));
-                                    };
-                                });
-                            });
-
-                            ui.end_row();
-
+                    ui.visuals_mut().dark_mode = true;
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Cancel").clicked() {
+                                self.solver.actions.pop();
+                            };
                         });
+                    });
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Clear").clicked() {
+                                self.solver.actions.clear();
+                                self.solutions = Some(Vec::with_capacity(10));
+                            };
+                        });
+                    });
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Solve").clicked() {
+                                if let Some(solutions) = self.solver.evaluate() {
+                                    self.solutions = Some(solutions);
+                                } else {
+                                    self.solutions = None;
+                                };
+                            };
+                        });
+                    });
+                    ui.end_row();
+                });
+            ui.separator();
+            egui::Grid::new("buttons_grid")
+                .striped(true)
+                .spacing(egui::vec2(10., 10.))
+                .show(ui, |ui| {
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.add_value.value,
+                                    )
+                                        .speed(0.2)
+                                        .range(-999..=999),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("ADD").clicked() {
+                                    self.solver.add_action(CalculatorActions::AddValue(
+                                        self.all_actions.add_value.clone(),
+                                    ))
+                                };
+                            });
+                        },
+                    );
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.multiply_by.value,
+                                    )
+                                        .speed(0.2)
+                                        .range(-999..=999),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("MUL").clicked() {
+                                    self.solver.add_action(CalculatorActions::MultiplyBy(
+                                        self.all_actions.multiply_by.clone(),
+                                    ))
+                                };
+                            });
+                        },
+                    );
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.divide_by.value,
+                                    )
+                                        .speed(0.2)
+                                        .range(-99..=99),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("DIV").clicked() {
+                                    self.solver.add_action(CalculatorActions::DivideBy(
+                                        self.all_actions.divide_by.clone(),
+                                    ))
+                                };
+                            });
+                        },
+                    );
+                    ui.end_row();
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("<<").clicked() {
+                                self.solver.add_action(CalculatorActions::Backspace(
+                                    self.all_actions.backspace.clone(),
+                                ))
+                            };
+                        });
+                    });
+
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.append_value.value,
+                                    )
+                                        .speed(0.2)
+                                        .range(0..=999),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("INSRT").clicked() {
+                                    self.solver.add_action(CalculatorActions::AppendValue(
+                                        self.all_actions.append_value.clone(),
+                                    ))
+                                };
+                            });
+                        },
+                    );
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            let width = ui.available_width();
+                            ui.horizontal(|ui| {
+                                ui.style_mut().spacing.interact_size.x = (width / 2.) - 1.;
+                                ui.style_mut().spacing.item_spacing.x = 2.;
+
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.replace_values.repl_trg,
+                                    )
+                                        .speed(0.2)
+                                        .range(-999..=999),
+                                );
+
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.replace_values.repl_with,
+                                    )
+                                        .speed(0.2)
+                                        .range(-999..=999),
+                                );
+                            });
+
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("=>").clicked() {
+                                    self.solver.add_action(
+                                        CalculatorActions::ReplaceValues(
+                                            self.all_actions.replace_values.clone(),
+                                        ),
+                                    )
+                                };
+                            });
+                        },
+                    );
+                    ui.end_row();
+
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(&mut self.all_actions.pow.value)
+                                        .speed(0.1)
+                                        .range(0..=10),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("x^n").clicked() {
+                                    self.solver.add_action(CalculatorActions::Pow(
+                                        self.all_actions.pow.clone(),
+                                    ))
+                                };
+                            });
+                        },
+                    );
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("+/-").clicked() {
+                                self.solver.add_action(CalculatorActions::SignInv(
+                                    self.all_actions.sign_inv.clone(),
+                                ))
+                            };
+                        });
+                    });
+
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Rvrs").clicked() {
+                                self.solver.add_action(CalculatorActions::Reverse(
+                                    self.all_actions.reverse.clone(),
+                                ))
+                            };
+                        });
+                    });
+                    ui.end_row();
+
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("SUM").clicked() {
+                                self.solver.add_action(CalculatorActions::SumDigits(
+                                    self.all_actions.sum_digits.clone(),
+                                ))
+                            };
+                        });
+                    });
+
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Shift <").clicked() {
+                                self.solver.add_action(CalculatorActions::ShiftL(
+                                    self.all_actions.shift_l.clone(),
+                                ))
+                            };
+                        });
+                    });
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Shift >").clicked() {
+                                self.solver.add_action(CalculatorActions::ShiftR(
+                                    self.all_actions.shift_r.clone(),
+                                ))
+                            };
+                        });
+                    });
+
+                    ui.end_row();
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Mirror").clicked() {
+                                self.solver.add_action(CalculatorActions::Mirror(
+                                    self.all_actions.mirror.clone(),
+                                ))
+                            };
+                        });
+                    });
+
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(
+                                        &mut self.all_actions.increment_buttons.value,
+                                    )
+                                        .speed(0.1)
+                                        .range(1..=99),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("[+]n").clicked() {
+                                    self.solver.add_action(
+                                        CalculatorActions::IncrementButtons(
+                                            self.all_actions.increment_buttons.clone(),
+                                        ),
+                                    )
+                                };
+                            });
+                        },
+                    );
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Store").clicked() {
+                                self.solver.add_action(CalculatorActions::StoreValue(
+                                    self.all_actions.store_value.clone(),
+                                ));
+                                self.solver.add_action(CalculatorActions::UnstoreValue(
+                                    self.all_actions.unstore_value.clone(),
+                                ));
+                            };
+                        });
+                    });
+                    ui.end_row();
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Inv10").clicked() {
+                                self.solver.add_action(CalculatorActions::Inv10(
+                                    self.all_actions.inv10.clone(),
+                                ));
+                            };
+                        });
+                    });
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            ui.button("Portal")
+                            // if ui.button("Portal").clicked() {
+                            //     self.solver.add_action(CalculatorActions::Inv10(
+                            //         self.all_actions.inv10.clone(),
+                            //     ));
+                            // };
+                        });
+                    });
+
+                    ui.end_row();
                 });
 
             ui.separator();
