@@ -10,6 +10,7 @@ fn has_solution() {
         output: 50,
         moves: 3,
         actions: vec![],
+        portals: None,
     };
 
     solver.add_action(CalculatorActions::MultiplyBy(MultiplyByAction { value: 2 }));
@@ -37,6 +38,7 @@ fn correct_solution() {
         output: 50,
         moves: 3,
         actions: vec![],
+        portals: None,
     };
 
     solver.add_action(CalculatorActions::MultiplyBy(MultiplyByAction { value: 3 }));
