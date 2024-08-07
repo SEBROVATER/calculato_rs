@@ -35,7 +35,7 @@ impl ActionEvaluation for MirrorAction {
         if reversed == input {
             return Err("Mirror changed nothing");
         }
-        if reversed > 999999 || reversed < -99999 {
+        if !(-99999..=999999).contains(&reversed) {
             return Err("Intermediate result is bigger than 999999");
         };
         Ok(reversed)
