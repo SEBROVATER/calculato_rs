@@ -1,8 +1,11 @@
+use eframe::epaint::text::TextWrapMode;
+use egui::scroll_area::ScrollBarVisibility;
+use egui::style::HandleShape;
+use egui::TextStyle;
+
 use crate::actions::all::CalculatorActions;
 use crate::gui::actions::AllActions;
 use crate::solver::Solver;
-use eframe::epaint::text::TextWrapMode;
-use egui::scroll_area::ScrollBarVisibility;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -62,7 +65,13 @@ impl eframe::App for CalculatorApp {
                             if ui.button(action.as_string()).clicked() {
                                 self.solver.remove_action_idx(i);
                             };
-                        }
+                        };
+                        if let Some(action) = &self.solver.portals {
+                            let action_clone = CalculatorActions::Portal(action.clone());
+                            if ui.button(action_clone.as_string()).clicked() {
+                                self.solver.remove_action(action_clone);
+                            };
+                        };
                     });
             });
 
@@ -106,6 +115,17 @@ impl eframe::App for CalculatorApp {
             });
 
             ui.separator();
+            ui.horizontal(|ui| {
+                ui.style_mut().spacing.slider_width = ui.available_width();
+                ui.style_mut().spacing.slider_rail_height = 2.;
+
+                ui.add(egui::Slider::new(&mut self.all_actions.portal.out_, 5..=0)
+                    .show_value(false)
+                    .handle_shape(HandleShape::Rect { aspect_ratio: 2. })
+
+                );
+            });
+
             ui.allocate_ui_with_layout(
                 egui::vec2(ui.available_width(), 35.),
                 egui::Layout::right_to_left(egui::Align::TOP),
@@ -122,12 +142,27 @@ impl eframe::App for CalculatorApp {
                         })
                     });
                     ui.centered_and_justified(|ui| {
-                        if self.solutions.is_none() {
+                        if &self.all_actions.portal.out_ >= &self.all_actions.portal.in_ {
+                            ui.label("Portal 'in' must be to the left of 'out'");
+                        } else if self.solutions.is_none() {
                             ui.label("Unsolvable");
                         };
+
+
+
                     });
                 },
             );
+            ui.horizontal(|ui| {
+                ui.style_mut().spacing.slider_width = ui.available_width();
+                ui.style_mut().spacing.slider_rail_height = 2.;
+
+                ui.add(egui::Slider::new(&mut self.all_actions.portal.in_, 5..=0)
+                    .show_value(true)
+                    .handle_shape(HandleShape::Rect { aspect_ratio: 2. })
+
+                );
+            });
             ui.separator();
 
 
@@ -148,6 +183,7 @@ impl eframe::App for CalculatorApp {
                             if ui.button("Clear").clicked() {
                                 self.solver.actions.clear();
                                 self.solutions = Some(Vec::with_capacity(10));
+                                self.solver.portals = None;
                             };
                         });
                     });
@@ -436,12 +472,18 @@ impl eframe::App for CalculatorApp {
                     });
                     ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                         ui.centered_and_justified(|ui| {
-                            ui.button("Portal")
-                            // if ui.button("Portal").clicked() {
-                            //     self.solver.add_action(CalculatorActions::Inv10(
-                            //         self.all_actions.inv10.clone(),
-                            //     ));
-                            // };
+
+                            if ui.button(format!("({})  ({})\nPortal",
+                                                 self.all_actions.portal.in_,
+                                                 self.all_actions.portal.out_,
+                            )).clicked() {
+                                if &self.all_actions.portal.out_ < &self.all_actions.portal.in_ {
+
+                                self.solver.add_action(CalculatorActions::Portal(
+                                    self.all_actions.portal.clone(),
+                                ));
+                                };
+                            };
                         });
                     });
 

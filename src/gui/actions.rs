@@ -1,10 +1,15 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use crate::actions::add_value::AddValueAction;
 use crate::actions::append_value::AppendValueAction;
 use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
 use crate::actions::increment_buttons::IncrementButtonAction;
+use crate::actions::inv10::Inv10Action;
 use crate::actions::mirror::MirrorAction;
 use crate::actions::multiply_by::MultiplyByAction;
+use crate::actions::portal::PortalAction;
 use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
 use crate::actions::reverse::ReverseAction;
@@ -13,9 +18,6 @@ use crate::actions::shift_r::ShiftRAction;
 use crate::actions::sign_inv::SignInvAction;
 use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 use crate::actions::sum_digits::SumDigitsAction;
-use std::cell::RefCell;
-use std::rc::Rc;
-use crate::actions::inv10::Inv10Action;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
@@ -47,8 +49,7 @@ pub struct AllActions {
     pub unstore_value: UnstoreValueAction,
     #[serde(skip)]
     pub inv10: Inv10Action,
-    // TODO: invert 10
-    // TODO: portal
+    pub portal: PortalAction,
 }
 
 impl Default for AllActions {
@@ -80,6 +81,7 @@ impl Default for AllActions {
                 value: store_value.clone(),
             },
             inv10: Inv10Action {},
+            portal: PortalAction {in_:0, out_: 2},
         }
     }
 }
