@@ -30,7 +30,7 @@ impl ActionEvaluation for UnstoreValueAction {
             return Err("Unstore can't work before store");
         };
         if let Ok(out) =
-            (String::new() + &input.to_string() + &(*self.value.borrow()).unwrap().to_string())
+            (String::new() + &input.to_string() + &(*self.value.borrow()).ok_or("Unstore has been called without stored value")?.to_string())
                 .parse::<i32>()
         {
             if out == input {
