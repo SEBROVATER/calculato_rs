@@ -81,7 +81,7 @@ impl Default for AllActions {
                 value: store_value.clone(),
             },
             inv10: Inv10Action {},
-            portal: PortalAction {in_:0, out_: 2},
+            portal: PortalAction { in_: 0, out_: 2 },
         }
     }
 }

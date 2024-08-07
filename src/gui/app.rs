@@ -65,7 +65,7 @@ impl eframe::App for CalculatorApp {
                             if ui.button(action.as_string()).clicked() {
                                 self.solver.remove_action_idx(i);
                             };
-                        };
+                        }
                         if let Some(action) = &self.solver.portals {
                             let action_clone = CalculatorActions::Portal(action.clone());
                             if ui.button(action_clone.as_string()).clicked() {
@@ -119,10 +119,10 @@ impl eframe::App for CalculatorApp {
                 ui.style_mut().spacing.slider_width = ui.available_width();
                 ui.style_mut().spacing.slider_rail_height = 2.;
 
-                ui.add(egui::Slider::new(&mut self.all_actions.portal.out_, 5..=0)
-                    .show_value(false)
-                    .handle_shape(HandleShape::Rect { aspect_ratio: 2. })
-
+                ui.add(
+                    egui::Slider::new(&mut self.all_actions.portal.out_, 5..=0)
+                        .show_value(false)
+                        .handle_shape(HandleShape::Rect { aspect_ratio: 2. }),
                 );
             });
 
@@ -147,9 +147,6 @@ impl eframe::App for CalculatorApp {
                         } else if self.solutions.is_none() {
                             ui.label("Unsolvable");
                         };
-
-
-
                     });
                 },
             );
@@ -157,14 +154,13 @@ impl eframe::App for CalculatorApp {
                 ui.style_mut().spacing.slider_width = ui.available_width();
                 ui.style_mut().spacing.slider_rail_height = 2.;
 
-                ui.add(egui::Slider::new(&mut self.all_actions.portal.in_, 5..=0)
-                    .show_value(true)
-                    .handle_shape(HandleShape::Rect { aspect_ratio: 2. })
-
+                ui.add(
+                    egui::Slider::new(&mut self.all_actions.portal.in_, 5..=0)
+                        .show_value(true)
+                        .handle_shape(HandleShape::Rect { aspect_ratio: 2. }),
                 );
             });
             ui.separator();
-
 
             egui::Grid::new("main_buttons_grid")
                 .striped(true)
@@ -207,9 +203,7 @@ impl eframe::App for CalculatorApp {
                         |ui| {
                             ui.vertical_centered_justified(|ui| {
                                 ui.add(
-                                    egui::DragValue::new(
-                                        &mut self.all_actions.add_value.value,
-                                    )
+                                    egui::DragValue::new(&mut self.all_actions.add_value.value)
                                         .speed(0.2)
                                         .range(-999..=999),
                                 );
@@ -229,9 +223,7 @@ impl eframe::App for CalculatorApp {
                         |ui| {
                             ui.vertical_centered_justified(|ui| {
                                 ui.add(
-                                    egui::DragValue::new(
-                                        &mut self.all_actions.multiply_by.value,
-                                    )
+                                    egui::DragValue::new(&mut self.all_actions.multiply_by.value)
                                         .speed(0.2)
                                         .range(-999..=999),
                                 );
@@ -251,9 +243,7 @@ impl eframe::App for CalculatorApp {
                         |ui| {
                             ui.vertical_centered_justified(|ui| {
                                 ui.add(
-                                    egui::DragValue::new(
-                                        &mut self.all_actions.divide_by.value,
-                                    )
+                                    egui::DragValue::new(&mut self.all_actions.divide_by.value)
                                         .speed(0.2)
                                         .range(-99..=99),
                                 );
@@ -284,9 +274,7 @@ impl eframe::App for CalculatorApp {
                         |ui| {
                             ui.vertical_centered_justified(|ui| {
                                 ui.add(
-                                    egui::DragValue::new(
-                                        &mut self.all_actions.append_value.value,
-                                    )
+                                    egui::DragValue::new(&mut self.all_actions.append_value.value)
                                         .speed(0.2)
                                         .range(0..=999),
                                 );
@@ -313,26 +301,24 @@ impl eframe::App for CalculatorApp {
                                     egui::DragValue::new(
                                         &mut self.all_actions.replace_values.repl_trg,
                                     )
-                                        .speed(0.2)
-                                        .range(-999..=999),
+                                    .speed(0.2)
+                                    .range(-999..=999),
                                 );
 
                                 ui.add(
                                     egui::DragValue::new(
                                         &mut self.all_actions.replace_values.repl_with,
                                     )
-                                        .speed(0.2)
-                                        .range(-999..=999),
+                                    .speed(0.2)
+                                    .range(-999..=999),
                                 );
                             });
 
                             ui.centered_and_justified(|ui| {
                                 if ui.button("=>").clicked() {
-                                    self.solver.add_action(
-                                        CalculatorActions::ReplaceValues(
-                                            self.all_actions.replace_values.clone(),
-                                        ),
-                                    )
+                                    self.solver.add_action(CalculatorActions::ReplaceValues(
+                                        self.all_actions.replace_values.clone(),
+                                    ))
                                 };
                             });
                         },
@@ -429,17 +415,15 @@ impl eframe::App for CalculatorApp {
                                     egui::DragValue::new(
                                         &mut self.all_actions.increment_buttons.value,
                                     )
-                                        .speed(0.1)
-                                        .range(1..=99),
+                                    .speed(0.1)
+                                    .range(1..=99),
                                 );
                             });
                             ui.centered_and_justified(|ui| {
                                 if ui.button("[+]n").clicked() {
-                                    self.solver.add_action(
-                                        CalculatorActions::IncrementButtons(
-                                            self.all_actions.increment_buttons.clone(),
-                                        ),
-                                    )
+                                    self.solver.add_action(CalculatorActions::IncrementButtons(
+                                        self.all_actions.increment_buttons.clone(),
+                                    ))
                                 };
                             });
                         },
@@ -468,16 +452,17 @@ impl eframe::App for CalculatorApp {
                     });
                     ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                         ui.centered_and_justified(|ui| {
-
-                            if ui.button(format!("({})  ({})\nPortal",
-                                                 self.all_actions.portal.in_,
-                                                 self.all_actions.portal.out_,
-                            )).clicked() {
+                            if ui
+                                .button(format!(
+                                    "({})  ({})\nPortal",
+                                    self.all_actions.portal.in_, self.all_actions.portal.out_,
+                                ))
+                                .clicked()
+                            {
                                 if &self.all_actions.portal.out_ < &self.all_actions.portal.in_ {
-
-                                self.solver.add_action(CalculatorActions::Portal(
-                                    self.all_actions.portal.clone(),
-                                ));
+                                    self.solver.add_action(CalculatorActions::Portal(
+                                        self.all_actions.portal.clone(),
+                                    ));
                                 };
                             };
                         });

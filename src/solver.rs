@@ -15,7 +15,7 @@ pub struct Solver {
     pub moves: u8,
     #[serde(skip)]
     pub actions: Vec<CalculatorActions>,
-    pub portals: Option<PortalAction>
+    pub portals: Option<PortalAction>,
 }
 
 impl Default for Solver {
@@ -34,18 +34,26 @@ impl Solver {
     pub fn add_action(&mut self, action: CalculatorActions) {
         match action {
             CalculatorActions::StoreValue(_) => {
-                if !self.actions.iter().any(|s| matches!(s, CalculatorActions::StoreValue(_))) {
+                if !self
+                    .actions
+                    .iter()
+                    .any(|s| matches!(s, CalculatorActions::StoreValue(_)))
+                {
                     self.actions.push(action);
                 };
             }
             CalculatorActions::UnstoreValue(_) => {
-                if !self.actions.iter().any(|s| matches!(s, CalculatorActions::UnstoreValue(_))) {
+                if !self
+                    .actions
+                    .iter()
+                    .any(|s| matches!(s, CalculatorActions::UnstoreValue(_)))
+                {
                     self.actions.push(action);
                 };
             }
             CalculatorActions::Portal(action_) => {
                 self.portals = Some(action_.clone());
-            },
+            }
             _ => self.actions.push(action),
         };
     }
@@ -69,11 +77,10 @@ impl Solver {
         };
         let mut solutions: Vec<Vec<CalculatorActions>> = Vec::new();
         for n in 1..self.moves {
-
-        let inter_solutions = (0..=n)
-            .map(|_| &self.actions)
-            .multi_cartesian_product()
-            .filter_map(|actions| self.evaluate_one_combination(&actions));
+            let inter_solutions = (0..=n)
+                .map(|_| &self.actions)
+                .multi_cartesian_product()
+                .filter_map(|actions| self.evaluate_one_combination(&actions));
             solutions.extend(inter_solutions);
         }
 

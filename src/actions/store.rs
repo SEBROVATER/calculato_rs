@@ -19,12 +19,10 @@ impl ActionEvaluation for StoreValueAction {
         if input < 0 {
             return Err("Store can't work with negatives");
         };
-        if let Some(stored_value) = *self.value.borrow(){
+        if let Some(stored_value) = *self.value.borrow() {
             if (input as u32) == stored_value {
                 return Err("Store tried to store the same value");
-
             };
-
         };
         *self.value.borrow_mut() = Some(input as u32);
         Ok(input)
@@ -36,9 +34,12 @@ impl ActionEvaluation for UnstoreValueAction {
         if self.value.borrow().is_none() {
             return Err("Unstore can't work before store");
         };
-        if let Ok(out) =
-            (String::new() + &input.to_string() + &(*self.value.borrow()).ok_or("Unstore has been called without stored value")?.to_string())
-                .parse::<i32>()
+        if let Ok(out) = (String::new()
+            + &input.to_string()
+            + &(*self.value.borrow())
+                .ok_or("Unstore has been called without stored value")?
+                .to_string())
+            .parse::<i32>()
         {
             if out == input {
                 return Err("Append changed nothing");

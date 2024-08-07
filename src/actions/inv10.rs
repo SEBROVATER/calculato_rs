@@ -7,7 +7,6 @@ pub struct Inv10Action {}
 
 impl ActionEvaluation for Inv10Action {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-
         if input == 0 {
             return Err("Inv10 changed nothing");
         }
@@ -21,13 +20,20 @@ impl ActionEvaluation for Inv10Action {
             let rem = input.checked_rem(radix).ok_or("Rem caused overflow")?;
             input = input.checked_div(radix).ok_or("Div caused overflow")?;
 
-            let diff = if rem == 0 { 0 } else { rem.abs_diff(radix) as i32};
-            inversed = inversed.checked_add(diff.checked_mul(tail).ok_or("Mul caused overflow")?)
+            let diff = if rem == 0 {
+                0
+            } else {
+                rem.abs_diff(radix) as i32
+            };
+            inversed = inversed
+                .checked_add(diff.checked_mul(tail).ok_or("Mul caused overflow")?)
                 .ok_or("Add caused overflow")?;
 
             tail = tail.checked_mul(radix).ok_or("Mul caused overflow")?;
         }
-        inversed = inversed.checked_mul(sign).ok_or("Mul with sign caused overflow")?;
+        inversed = inversed
+            .checked_mul(sign)
+            .ok_or("Mul with sign caused overflow")?;
 
         if inversed == input {
             return Err("Inv10 changed nothing");
