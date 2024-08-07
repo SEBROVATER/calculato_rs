@@ -142,7 +142,7 @@ impl eframe::App for CalculatorApp {
                         })
                     });
                     ui.centered_and_justified(|ui| {
-                        if &self.all_actions.portal.out_ >= &self.all_actions.portal.in_ {
+                        if self.all_actions.portal.out_ >= self.all_actions.portal.in_ {
                             ui.label("Portal 'in' must be to the left of 'out'");
                         } else if self.solutions.is_none() {
                             ui.label("Unsolvable");
@@ -459,7 +459,7 @@ impl eframe::App for CalculatorApp {
                                 ))
                                 .clicked()
                             {
-                                if &self.all_actions.portal.out_ < &self.all_actions.portal.in_ {
+                                if self.all_actions.portal.out_ < self.all_actions.portal.in_ {
                                     self.solver.add_action(CalculatorActions::Portal(
                                         self.all_actions.portal.clone(),
                                     ));
