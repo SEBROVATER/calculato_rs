@@ -63,11 +63,15 @@ impl Solver {
         if self.input == self.output {
             return None;
         };
-        let solutions: Vec<Vec<CalculatorActions>> = (0..self.moves)
+        let mut solutions: Vec<Vec<CalculatorActions>> = Vec::new();
+        for n in 1..self.moves {
+
+        let inter_solutions = (0..=n)
             .map(|_| &self.actions)
             .multi_cartesian_product()
-            .filter_map(|actions| self.evaluate_one_combination(&actions))
-            .collect();
+            .filter_map(|actions| self.evaluate_one_combination(&actions));
+            solutions.extend(inter_solutions);
+        }
 
         if solutions.len() == 0 {
             return None;
