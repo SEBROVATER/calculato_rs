@@ -172,11 +172,7 @@ impl eframe::App for CalculatorApp {
                 .show(ui, |ui| {
                     ui.visuals_mut().dark_mode = true;
                     ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui.button("Cancel").clicked() {
-                                self.solver.actions.pop();
-                            };
-                        });
+                        ui.add_space(ui.available_width())
                     });
                     ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                         ui.centered_and_justified(|ui| {
