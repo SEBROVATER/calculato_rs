@@ -4,7 +4,7 @@ use calculato_rs::CalculatorApp;
 fn main() -> eframe::Result {
     let native_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([476.0, 900.0])
+            .with_inner_size([476.0, 850.0])
             .with_resizable(false),
         ..Default::default()
     };
