@@ -63,7 +63,7 @@ impl Solver {
             solutions.extend(inter_solutions);
         }
 
-        if solutions.len() == 0 {
+        if solutions.is_empty() {
             return None;
         }
         Some(solutions)
