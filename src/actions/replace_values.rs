@@ -21,7 +21,7 @@ impl ActionEvaluation for ReplaceValuesAction {
             if out == input {
                 return Err("Replace changed nothing");
             };
-            if out > 999999 || out < -99999 {
+            if !(-99999..=999999).contains(&out) {
                 return Err("Intermediate result is bigger than 999999");
             };
             return Ok(out);

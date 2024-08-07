@@ -33,7 +33,7 @@ impl ActionEvaluation for Inv10Action {
         if inversed == input {
             return Err("Inv10 changed nothing");
         }
-        if inversed > 999999 || inversed < -99999 {
+        if !(-99999..=999999).contains(&inversed) {
             return Err("Intermediate result is bigger than 999999");
         };
         Ok(inversed)
