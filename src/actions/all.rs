@@ -7,6 +7,7 @@ use crate::actions::increment_buttons::IncrementButtonAction;
 use crate::actions::inv10::Inv10Action;
 use crate::actions::mirror::MirrorAction;
 use crate::actions::multiply_by::MultiplyByAction;
+use crate::actions::portal::PortalAction;
 use crate::actions::pow::PowAction;
 use crate::actions::replace_values::ReplaceValuesAction;
 use crate::actions::reverse::ReverseAction;
@@ -35,8 +36,7 @@ pub enum CalculatorActions {
     StoreValue(StoreValueAction),
     UnstoreValue(UnstoreValueAction),
     Inv10(Inv10Action),
-    // TODO: invert 10
-    // TODO: portal
+    Portal(PortalAction),
 }
 
 impl CalculatorActions {
@@ -59,6 +59,7 @@ impl CalculatorActions {
             Self::StoreValue(action) => format!("{}", action),
             Self::UnstoreValue(action) => format!("{}", action),
             Self::Inv10(action) => format!("{}", action),
+            Self::Portal(action) => format!("{}", action),
         }
     }
 
@@ -81,6 +82,7 @@ impl CalculatorActions {
             Self::StoreValue(action) => action.eval(input),
             Self::UnstoreValue(action) => action.eval(input),
             Self::Inv10(action) => action.eval(input),
+            Self::Portal(action) => action.eval(input),
         }
     }
 }
