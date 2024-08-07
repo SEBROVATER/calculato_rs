@@ -110,7 +110,7 @@ impl Solver {
         for i in 0..actions_copy.len() {
             let (left_mid, right) = actions_copy.split_at_mut(i + 1);
             if let CalculatorActions::IncrementButtons(action_) = left_mid.get(i).unwrap() {
-                if let Err(_) = action_.eval_on_actions(right) {
+                if action_.eval_on_actions(right).is_err() {
                     return None;
                 };
             };
