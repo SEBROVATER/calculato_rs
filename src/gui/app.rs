@@ -113,6 +113,7 @@ impl eframe::App for CalculatorApp {
                     ui.add_space(10.);
                     ui.allocate_ui(egui::vec2(20., ui.available_height()), |ui| {
                         ui.centered_and_justified(|ui| {
+                            ui.style_mut().drag_value_text_style = TextStyle::Heading;
                             ui.add(
                                 egui::DragValue::new(&mut self.solver.input)
                                     .speed(0.25)
