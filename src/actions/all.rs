@@ -4,6 +4,7 @@ use crate::actions::backspace::BackspaceAction;
 use crate::actions::divide_by::DivideByAction;
 use crate::actions::eval::ActionEvaluation;
 use crate::actions::increment_buttons::IncrementButtonAction;
+use crate::actions::inv10::Inv10Action;
 use crate::actions::mirror::MirrorAction;
 use crate::actions::multiply_by::MultiplyByAction;
 use crate::actions::pow::PowAction;
@@ -33,7 +34,7 @@ pub enum CalculatorActions {
     IncrementButtons(IncrementButtonAction),
     StoreValue(StoreValueAction),
     UnstoreValue(UnstoreValueAction),
-    // TODO: store
+    Inv10(Inv10Action),
     // TODO: invert 10
     // TODO: portal
 }
@@ -57,6 +58,7 @@ impl CalculatorActions {
             Self::IncrementButtons(action) => format!("{}", action),
             Self::StoreValue(action) => format!("{}", action),
             Self::UnstoreValue(action) => format!("{}", action),
+            Self::Inv10(action) => format!("{}", action),
         }
     }
 
@@ -78,6 +80,7 @@ impl CalculatorActions {
             Self::IncrementButtons(action) => action.eval(input),
             Self::StoreValue(action) => action.eval(input),
             Self::UnstoreValue(action) => action.eval(input),
+            Self::Inv10(action) => action.eval(input),
         }
     }
 }

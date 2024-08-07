@@ -15,3 +15,4 @@ pub mod shift_r;
 pub mod sign_inv;
 pub mod store;
 pub mod sum_digits;
+pub mod inv10;
