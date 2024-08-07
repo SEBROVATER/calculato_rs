@@ -19,6 +19,13 @@ impl ActionEvaluation for StoreValueAction {
         if input < 0 {
             return Err("Store can't work with negatives");
         };
+        if let Some(stored_value) = *self.value.borrow(){
+            if (input as u32) == stored_value {
+                return Err("Store tried to store the same value");
+
+            };
+
+        };
         *self.value.borrow_mut() = Some(input as u32);
         Ok(input)
     }
