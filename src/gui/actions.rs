@@ -15,6 +15,7 @@ use crate::actions::store::{StoreValueAction, UnstoreValueAction};
 use crate::actions::sum_digits::SumDigitsAction;
 use std::cell::RefCell;
 use std::rc::Rc;
+use crate::actions::inv10::Inv10Action;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
@@ -44,6 +45,8 @@ pub struct AllActions {
     pub store_value: StoreValueAction,
     #[serde(skip)]
     pub unstore_value: UnstoreValueAction,
+    #[serde(skip)]
+    pub inv10: Inv10Action,
     // TODO: invert 10
     // TODO: portal
 }
@@ -76,6 +79,7 @@ impl Default for AllActions {
             unstore_value: UnstoreValueAction {
                 value: store_value.clone(),
             },
+            inv10: Inv10Action {},
         }
     }
 }

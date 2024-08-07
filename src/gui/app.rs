@@ -421,7 +421,18 @@ impl eframe::App for CalculatorApp {
                                 });
                             });
                             ui.end_row();
-                            // TODO: display name for button dynamically
+                            ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                                ui.centered_and_justified(|ui| {
+                                    if ui.button("Inv10").clicked() {
+                                        self.solver.add_action(CalculatorActions::Inv10(
+                                            self.all_actions.inv10.clone(),
+                                        ));
+                                    };
+                                });
+                            });
+
+                            ui.end_row();
+
                         });
                 });
 
