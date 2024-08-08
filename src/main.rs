@@ -4,8 +4,9 @@ use calculato_rs::CalculatorApp;
 fn main() -> eframe::Result {
     let native_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([476.0, 850.0])
-            .with_resizable(false),
+            .with_inner_size([476.0, 780.0])
+            .with_resizable(false)
+            .with_maximize_button(false),
         ..Default::default()
     };
     eframe::run_native(
