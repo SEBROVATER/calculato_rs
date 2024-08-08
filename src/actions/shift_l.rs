@@ -7,34 +7,23 @@ pub struct ShiftLAction {}
 
 impl ActionEvaluation for ShiftLAction {
     fn eval(&self, input: i32) -> Result<i32, &'static str> {
-        let abs: i32 = if let Some(abs_) = input.checked_abs() {
-            abs_
-        } else {
-            return Err("Abs caused overflow");
+        if input == 0 {
+            return Err("Shift changed nothing");
         };
-        let sign = if let Some(sign_) = input.checked_div(abs) {
-            sign_
-        } else if input == 0 {
-            1
-        } else {
-            return Err("Div caused overflow");
-        };
+        let abs = input.checked_abs().ok_or("Abs caused overflow")?;
+        let sign = input.signum();
 
         let mut chars: Vec<char> = abs.to_string().chars().collect();
-
         chars.rotate_left(1);
-        if let Ok(out) = String::from_iter(chars).parse::<i32>() {
-            if let Some(with_sign) = out.checked_mul(sign) {
-                if with_sign == input {
-                    return Err("Shift changed nothing");
-                };
-                return Ok(with_sign);
-            } else {
-                return Err("Mul caused overflow");
-            };
-        } else {
-            return Err("Shift caused unparseable string");
-        };
+
+        let out: i32 = String::from_iter(chars).parse().map_err(|_| "Shift caused unparseable string")?;
+        let with_sign = out.checked_mul(sign).ok_or("Mul caused overflow")?;
+
+        if with_sign == input {
+            return Err("Shift changed nothing");
+        }
+
+        Ok(with_sign)
     }
 }
 
