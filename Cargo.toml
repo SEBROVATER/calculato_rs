@@ -11,7 +11,7 @@ eframe = { version = "0.28.1", features = [
 ] }
 itertools = "0.13.0"
 egui_extras = "0.28.1"
-serde = { version = "1.0.204", features = ["derive"] }
+serde = { version = "1.0.205", features = ["derive"] }
 
 
 [profile.release]
