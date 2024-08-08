@@ -470,8 +470,14 @@ impl eframe::App for CalculatorApp {
 
                     ui.end_row();
                 });
-
-            ui.separator();
         });
+        egui::TopBottomPanel::bottom("author").show( ctx,  | ui |
+            {
+          ui.horizontal(|ui| {
+              ui.label("Directed by");
+              ui.hyperlink_to("SEBROVATER", "https://github.com/SEBROVATER/calculato_rs");
+          })
+            }
+        );
     }
 }
