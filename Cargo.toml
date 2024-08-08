@@ -18,3 +18,6 @@ serde = { version = "1.0.204", features = ["derive"] }
 codegen-units = 1
 lto = "fat"
 panic = "abort"
+
+[lints.clippy]
+reversed_empty_ranges = "allow"
