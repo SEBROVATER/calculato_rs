@@ -93,7 +93,14 @@ impl eframe::App for CalculatorApp {
                         };
                     })
             });
-
+        egui::TopBottomPanel::bottom("author").show( ctx,  | ui |
+            {
+                ui.horizontal(|ui| {
+                    ui.label("Directed by");
+                    ui.hyperlink_to("SEBROVATER", "https://github.com/SEBROVATER/calculato_rs");
+                })
+            }
+        );
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("calculato_rs");
             ui.add_space(5.0);
@@ -114,7 +121,6 @@ impl eframe::App for CalculatorApp {
                 );
             });
 
-            ui.separator();
             ui.horizontal(|ui| {
                 ui.style_mut().spacing.slider_width = ui.available_width();
                 ui.style_mut().spacing.slider_rail_height = 2.;
@@ -160,7 +166,6 @@ impl eframe::App for CalculatorApp {
                         .handle_shape(HandleShape::Rect { aspect_ratio: 2. }),
                 );
             });
-            ui.separator();
 
             egui::Grid::new("main_buttons_grid")
                 .striped(true)
@@ -192,10 +197,10 @@ impl eframe::App for CalculatorApp {
                     });
                     ui.end_row();
                 });
-            ui.separator();
+            ui.add_space(10.);
             egui::Grid::new("buttons_grid")
                 .striped(true)
-                .spacing(egui::vec2(10., 10.))
+                .spacing(egui::vec2(10., 5.))
                 .show(ui, |ui| {
                     ui.allocate_ui_with_layout(
                         egui::vec2(45., 45.),
@@ -217,6 +222,25 @@ impl eframe::App for CalculatorApp {
                             });
                         },
                     );
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("+/-").clicked() {
+                                self.solver.add_action(CalculatorActions::SignInv(
+                                    self.all_actions.sign_inv.clone(),
+                                ))
+                            };
+                        });
+                    });
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("<<").clicked() {
+                                self.solver.add_action(CalculatorActions::Backspace(
+                                    self.all_actions.backspace.clone(),
+                                ))
+                            };
+                        });
+                    });
+                    ui.end_row();
                     ui.allocate_ui_with_layout(
                         egui::vec2(45., 45.),
                         egui::Layout::top_down(egui::Align::Center),
@@ -243,37 +267,6 @@ impl eframe::App for CalculatorApp {
                         |ui| {
                             ui.vertical_centered_justified(|ui| {
                                 ui.add(
-                                    egui::DragValue::new(&mut self.all_actions.divide_by.value)
-                                        .speed(0.2)
-                                        .range(-99..=99),
-                                );
-                            });
-                            ui.centered_and_justified(|ui| {
-                                if ui.button("DIV").clicked() {
-                                    self.solver.add_action(CalculatorActions::DivideBy(
-                                        self.all_actions.divide_by.clone(),
-                                    ))
-                                };
-                            });
-                        },
-                    );
-                    ui.end_row();
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui.button("<<").clicked() {
-                                self.solver.add_action(CalculatorActions::Backspace(
-                                    self.all_actions.backspace.clone(),
-                                ))
-                            };
-                        });
-                    });
-
-                    ui.allocate_ui_with_layout(
-                        egui::vec2(45., 45.),
-                        egui::Layout::top_down(egui::Align::Center),
-                        |ui| {
-                            ui.vertical_centered_justified(|ui| {
-                                ui.add(
                                     egui::DragValue::new(&mut self.all_actions.append_value.value)
                                         .speed(0.2)
                                         .range(0..=999),
@@ -283,6 +276,36 @@ impl eframe::App for CalculatorApp {
                                 if ui.button("INSRT").clicked() {
                                     self.solver.add_action(CalculatorActions::AppendValue(
                                         self.all_actions.append_value.clone(),
+                                    ))
+                                };
+                            });
+                        },
+                    );
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Rvrs").clicked() {
+                                self.solver.add_action(CalculatorActions::Reverse(
+                                    self.all_actions.reverse.clone(),
+                                ))
+                            };
+                        });
+                    });
+                    ui.end_row();
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(45., 45.),
+                        egui::Layout::top_down(egui::Align::Center),
+                        |ui| {
+                            ui.vertical_centered_justified(|ui| {
+                                ui.add(
+                                    egui::DragValue::new(&mut self.all_actions.divide_by.value)
+                                        .speed(0.2)
+                                        .range(-99..=99),
+                                );
+                            });
+                            ui.centered_and_justified(|ui| {
+                                if ui.button("DIV").clicked() {
+                                    self.solver.add_action(CalculatorActions::DivideBy(
+                                        self.all_actions.divide_by.clone(),
                                     ))
                                 };
                             });
@@ -301,16 +324,16 @@ impl eframe::App for CalculatorApp {
                                     egui::DragValue::new(
                                         &mut self.all_actions.replace_values.repl_trg,
                                     )
-                                    .speed(0.2)
-                                    .range(-999..=999),
+                                        .speed(0.2)
+                                        .range(-999..=999),
                                 );
 
                                 ui.add(
                                     egui::DragValue::new(
                                         &mut self.all_actions.replace_values.repl_with,
                                     )
-                                    .speed(0.2)
-                                    .range(-999..=999),
+                                        .speed(0.2)
+                                        .range(-999..=999),
                                 );
                             });
 
@@ -323,6 +346,15 @@ impl eframe::App for CalculatorApp {
                             });
                         },
                     );
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Mirror").clicked() {
+                                self.solver.add_action(CalculatorActions::Mirror(
+                                    self.all_actions.mirror.clone(),
+                                ))
+                            };
+                        });
+                    });
                     ui.end_row();
 
                     ui.allocate_ui_with_layout(
@@ -347,37 +379,6 @@ impl eframe::App for CalculatorApp {
                     );
                     ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                         ui.centered_and_justified(|ui| {
-                            if ui.button("+/-").clicked() {
-                                self.solver.add_action(CalculatorActions::SignInv(
-                                    self.all_actions.sign_inv.clone(),
-                                ))
-                            };
-                        });
-                    });
-
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui.button("Rvrs").clicked() {
-                                self.solver.add_action(CalculatorActions::Reverse(
-                                    self.all_actions.reverse.clone(),
-                                ))
-                            };
-                        });
-                    });
-                    ui.end_row();
-
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui.button("SUM").clicked() {
-                                self.solver.add_action(CalculatorActions::SumDigits(
-                                    self.all_actions.sum_digits.clone(),
-                                ))
-                            };
-                        });
-                    });
-
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
                             if ui.button("Shift <").clicked() {
                                 self.solver.add_action(CalculatorActions::ShiftL(
                                     self.all_actions.shift_l.clone(),
@@ -396,15 +397,62 @@ impl eframe::App for CalculatorApp {
                     });
 
                     ui.end_row();
+
                     ui.allocate_ui(egui::vec2(45., 45.), |ui| {
                         ui.centered_and_justified(|ui| {
-                            if ui.button("Mirror").clicked() {
-                                self.solver.add_action(CalculatorActions::Mirror(
-                                    self.all_actions.mirror.clone(),
+                            if ui.button("SUM").clicked() {
+                                self.solver.add_action(CalculatorActions::SumDigits(
+                                    self.all_actions.sum_digits.clone(),
                                 ))
                             };
                         });
                     });
+
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Store").clicked() {
+                                self.solver.add_action(CalculatorActions::StoreValue(
+                                    self.all_actions.store_value.clone(),
+                                ));
+                                self.solver.add_action(CalculatorActions::UnstoreValue(
+                                    self.all_actions.unstore_value.clone(),
+                                ));
+                            };
+                        });
+                    });
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui
+                                .button(format!(
+                                    "({})  ({})\nPortal",
+                                    self.all_actions.portal.in_, self.all_actions.portal.out_,
+                                ))
+                                .clicked()
+                            {
+                                if self.all_actions.portal.out_ < self.all_actions.portal.in_ {
+                                    self.solver.add_action(CalculatorActions::Portal(
+                                        self.all_actions.portal.clone(),
+                                    ));
+                                };
+                            };
+                        });
+                    });
+                    ui.end_row();
+
+                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
+                        ui.centered_and_justified(|ui| {
+                            if ui.button("Inv10").clicked() {
+                                self.solver.add_action(CalculatorActions::Inv10(
+                                    self.all_actions.inv10.clone(),
+                                ));
+                            };
+                        });
+                    });
+
+
+
+
+
 
                     ui.allocate_ui_with_layout(
                         egui::vec2(45., 45.),
@@ -428,56 +476,14 @@ impl eframe::App for CalculatorApp {
                             });
                         },
                     );
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui.button("Store").clicked() {
-                                self.solver.add_action(CalculatorActions::StoreValue(
-                                    self.all_actions.store_value.clone(),
-                                ));
-                                self.solver.add_action(CalculatorActions::UnstoreValue(
-                                    self.all_actions.unstore_value.clone(),
-                                ));
-                            };
-                        });
-                    });
+
                     ui.end_row();
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui.button("Inv10").clicked() {
-                                self.solver.add_action(CalculatorActions::Inv10(
-                                    self.all_actions.inv10.clone(),
-                                ));
-                            };
-                        });
-                    });
-                    ui.allocate_ui(egui::vec2(45., 45.), |ui| {
-                        ui.centered_and_justified(|ui| {
-                            if ui
-                                .button(format!(
-                                    "({})  ({})\nPortal",
-                                    self.all_actions.portal.in_, self.all_actions.portal.out_,
-                                ))
-                                .clicked()
-                            {
-                                if self.all_actions.portal.out_ < self.all_actions.portal.in_ {
-                                    self.solver.add_action(CalculatorActions::Portal(
-                                        self.all_actions.portal.clone(),
-                                    ));
-                                };
-                            };
-                        });
-                    });
+
+                    ui.end_row();
 
                     ui.end_row();
                 });
         });
-        egui::TopBottomPanel::bottom("author").show( ctx,  | ui |
-            {
-          ui.horizontal(|ui| {
-              ui.label("Directed by");
-              ui.hyperlink_to("SEBROVATER", "https://github.com/SEBROVATER/calculato_rs");
-          })
-            }
-        );
+
     }
 }
