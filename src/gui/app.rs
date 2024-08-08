@@ -102,6 +102,7 @@ impl eframe::App for CalculatorApp {
             }
         );
         egui::CentralPanel::default().show(ctx, |ui| {
+            ui.style_mut().explanation_tooltips = true;
             ui.heading("calculato_rs");
             ui.add_space(5.0);
 
@@ -128,8 +129,9 @@ impl eframe::App for CalculatorApp {
                 ui.add(
                     egui::Slider::new(&mut self.all_actions.portal.out_, 5..=0)
                         .show_value(false)
-                        .handle_shape(HandleShape::Rect { aspect_ratio: 2. }),
-                );
+                        .handle_shape(HandleShape::Rect { aspect_ratio: 2. })
+                        ,
+                ).on_hover_text("'OUT' portal. Counts from right to left.");
             });
 
             ui.allocate_ui_with_layout(
@@ -140,6 +142,7 @@ impl eframe::App for CalculatorApp {
                     ui.allocate_ui(egui::vec2(20., ui.available_height()), |ui| {
                         ui.centered_and_justified(|ui| {
                             ui.style_mut().drag_value_text_style = TextStyle::Heading;
+
                             ui.add(
                                 egui::DragValue::new(&mut self.solver.input)
                                     .speed(0.25)
@@ -149,7 +152,7 @@ impl eframe::App for CalculatorApp {
                     });
                     ui.centered_and_justified(|ui| {
                         if self.all_actions.portal.out_ >= self.all_actions.portal.in_ {
-                            ui.label("Portal 'in' must be to the left of 'out'");
+                            ui.label("'IN' portal must be to the left of 'OUT'");
                         } else if self.solutions.is_none() {
                             ui.label("Unsolvable");
                         };
@@ -164,7 +167,7 @@ impl eframe::App for CalculatorApp {
                     egui::Slider::new(&mut self.all_actions.portal.in_, 5..=0)
                         .show_value(true)
                         .handle_shape(HandleShape::Rect { aspect_ratio: 2. }),
-                );
+                ).on_hover_text("'IN' portal. Counts from right to left.");
             });
 
             egui::Grid::new("main_buttons_grid")
